@@ -7,15 +7,15 @@
   
   <title>面试题汇总 | blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1.Python是如何进行内存管理的？ 答:从三个方面来说,一对象的引用计数机制,二垃圾回收机制,三内存池机制 一、对象的引用计数机制 Python内部使用引用计数，来保持追踪内存中的对象，所有对象都有引用计数。 引用计数增加的情况： 1，一个对象分配一个新名称 2，将其放入一个容器中（如列表、元组或字典） 引用计数减少的情况： 1，使用del语句对对象别名显示的销毁 2，引用超出作用域或被重新赋">
+  <meta name="description" content="1.python下多线程的限制以及多进程中传递参数的方式？python多线程有个全局解释器锁（global interpreter lock），这个锁的意思是任一时间只能有一个线程运用解释器，跟单cpu跑多个程序一个意思，我们都是轮着用的，这叫“并发”，不是“并行”。多进程间同享数据，能够运用 multiprocessing.Value 和 multiprocessing.Array 2.Pyth">
 <meta property="og:type" content="article">
 <meta property="og:title" content="面试题汇总">
 <meta property="og:url" content="http://yoursite.com/2020/05/08/%E9%9D%A2%E8%AF%95%E9%A2%98%E6%B1%87%E6%80%BB/index.html">
 <meta property="og:site_name" content="blog">
-<meta property="og:description" content="1.Python是如何进行内存管理的？ 答:从三个方面来说,一对象的引用计数机制,二垃圾回收机制,三内存池机制 一、对象的引用计数机制 Python内部使用引用计数，来保持追踪内存中的对象，所有对象都有引用计数。 引用计数增加的情况： 1，一个对象分配一个新名称 2，将其放入一个容器中（如列表、元组或字典） 引用计数减少的情况： 1，使用del语句对对象别名显示的销毁 2，引用超出作用域或被重新赋">
+<meta property="og:description" content="1.python下多线程的限制以及多进程中传递参数的方式？python多线程有个全局解释器锁（global interpreter lock），这个锁的意思是任一时间只能有一个线程运用解释器，跟单cpu跑多个程序一个意思，我们都是轮着用的，这叫“并发”，不是“并行”。多进程间同享数据，能够运用 multiprocessing.Value 和 multiprocessing.Array 2.Pyth">
 <meta property="og:locale" content="zh">
 <meta property="article:published_time" content="2020-05-08T12:16:42.000Z">
-<meta property="article:modified_time" content="2020-05-08T12:36:06.347Z">
+<meta property="article:modified_time" content="2020-05-20T16:13:53.872Z">
 <meta property="article:author" content="Xu Wei">
 <meta name="twitter:card" content="summary">
   
@@ -88,95 +88,428 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>1.Python是如何进行内存管理的？</p>
-<p>答:从三个方面来说,一对象的引用计数机制,二垃圾回收机制,三内存池机制</p>
-<p>一、对象的引用计数机制</p>
-<p>Python内部使用引用计数，来保持追踪内存中的对象，所有对象都有引用计数。</p>
-<p>引用计数增加的情况：</p>
-<p>1，一个对象分配一个新名称</p>
-<p>2，将其放入一个容器中（如列表、元组或字典）</p>
-<p>引用计数减少的情况：</p>
-<p>1，使用del语句对对象别名显示的销毁</p>
-<p>2，引用超出作用域或被重新赋值</p>
-<p>sys.getrefcount( )函数可以获得对象的当前引用计数</p>
-<p>多数情况下，引用计数比你猜测得要大得多。对于不可变数据（如数字和字符串），解释器会在程序的不同部分共享内存，以便节约内存。</p>
-<p>二、垃圾回收</p>
-<p>1，当一个对象的引用计数归零时，它将被垃圾收集机制处理掉。</p>
-<p>2，当两个对象a和b相互引用时，del语句可以减少a和b的引用计数，并销毁用于引用底层对象的名称。然而由于每个对象都包含一个对其他对象的应用，因此引用计数不会归零，对象也不会销毁。（从而导致内存泄露）。为解决这一问题，解释器会定期执行一个循环检测器，搜索不可访问对象的循环并删除它们。</p>
-<p>三、内存池机制</p>
-<p>Python提供了对内存的垃圾收集机制，但是它将不用的内存放到内存池而不是返回给操作系统。</p>
-<p>1，Pymalloc机制。为了加速Python的执行效率，Python引入了一个内存池机制，用于管理对小块内存的申请和释放。</p>
-<p>2，Python中所有小于256个字节的对象都使用pymalloc实现的分配器，而大的对象则使用系统的malloc。</p>
-<p>3，对于Python对象，如整数，浮点数和List，都有其独立的私有内存池，对象间不共享他们的内存池。也就是说如果你分配又释放了大量的整数，用于缓存这些整数的内存就不能再分配给浮点数。</p>
-<p>2.什么是lambda函数？它有什么好处?</p>
-<p>答：lambda 表达式，通常是在需要一个函数，但是又不想费神去命名一个函数的场合下使用，也就是指匿名函数</p>
-<p>lambda函数：首要用途是指点短小的回调函数</p>
-<p>lambda [arguments]:expression</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; a&#x3D;lambdax,y:x+y</span><br><span class="line">&gt;&gt;&gt; a(3,11)</span><br></pre></td></tr></table></figure>
-<p>3.Python里面如何实现tuple和list的转换？</p>
-<p>答：直接使用tuple和list函数就行了，type()可以判断对象的类型</p>
-<p>4.请写出一段Python代码实现删除一个list里面的重复元素</p>
-<p>答：</p>
-<p>1,使用set函数，set(list)</p>
-<p>2，使用字典函数，</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt;a&#x3D;[1,2,4,2,4,5,6,5,7,8,9,0]</span><br><span class="line">&gt;&gt;&gt; b&#x3D;&#123;&#125;</span><br><span class="line">&gt;&gt;&gt;b&#x3D;b.fromkeys(a)</span><br><span class="line">&gt;&gt;&gt;c&#x3D;list(b.keys())</span><br><span class="line">&gt;&gt;&gt; c</span><br></pre></td></tr></table></figure>
+        <h3 id="1-python下多线程的限制以及多进程中传递参数的方式？"><a href="#1-python下多线程的限制以及多进程中传递参数的方式？" class="headerlink" title="1.python下多线程的限制以及多进程中传递参数的方式？"></a>1.python下多线程的限制以及多进程中传递参数的方式？</h3><p>python多线程有个全局解释器锁（global interpreter lock），这个锁的意思是任一时间只能有一个线程运用解释器，跟单cpu跑多个程序一个意思，我们都是轮着用的，这叫“并发”，不是“并行”。<br>多进程间同享数据，能够运用 multiprocessing.Value 和 multiprocessing.Array</p>
+<h3 id="2-Python是怎么进行内存管理的？"><a href="#2-Python是怎么进行内存管理的？" class="headerlink" title="2.Python是怎么进行内存管理的？"></a>2.Python是怎么进行内存管理的？</h3><p>Python引用了一个内存池(memory pool)机制，即Pymalloc机制(malloc:n.分配内存)，用于管理对小块内存的申请和释放<br>内存池（memory pool）的概念：<br>　　当 创建大量消耗小内存的对象时，频繁调用new/malloc会导致大量的内存碎片，致使效率降低。内存池的概念就是预先在内存中申请一定数量的，大小相等 的内存块留作备用，当有新的内存需求时，就先从内存池中分配内存给这个需求，不够了之后再申请新的内存。这样做最显著的优势就是能够减少内存碎片，提升效率。<br>内存池的实现方式有很多，性能和适用范围也不一样。<br>python中的内存管理机制——Pymalloc：<br>　　python中的内存管理机制都有两套实现，一套是针对小对象，就是大小小于256bits时,pymalloc会在内存池中申请内存空间；当大于256bits，则会直接执行new/malloc的行为来申请内存空间。<br>　　关于释放内存方面，当一个对象的引用计数变为0时，python就会调用它的析构函数。在析构时，也采用了内存池机制，从内存池来的内存会被归还到内存池中，以避免频繁地释放动作。<br><a href="http://developer.51cto.com/art/201007/213585.htm" target="_blank" rel="noopener">http://developer.51cto.com/art/201007/213585.htm</a></p>
+<h3 id="3-什么是lambda函数？它有什么好处"><a href="#3-什么是lambda函数？它有什么好处" class="headerlink" title="3.什么是lambda函数？它有什么好处?"></a>3.什么是lambda函数？它有什么好处?</h3><p>lambda 函数是一个能够接纳任意多个参数(包括可选参数)并且返回单个表达式值的函数。 lambda 函数不能包括指令，它们所包括的表达式不能超过一个。不要试图向lambda 函数中塞入太多的东西；假如你需要更复杂的东西，应该定义一个一般函数，然后想让它多长就多长。<br><a href="http://www.kuqin.com/diveinto_python_document/apihelper_lambda.html" target="_blank" rel="noopener">http://www.kuqin.com/diveinto_python_document/apihelper_lambda.html</a></p>
+<h3 id="4-介绍一下Python中webbrowser的用法？"><a href="#4-介绍一下Python中webbrowser的用法？" class="headerlink" title="4.介绍一下Python中webbrowser的用法？"></a>4.介绍一下Python中webbrowser的用法？</h3><p>webbrowser模块提供了一个高级接口来显现基于Web的文档，大部分情况下只需要简单的调用open()办法。</p>
+<p>webbrowser定义了如下的反常：</p>
+<p>exception webbrowser.Error, 当浏览器控件发作过错是会抛出这个反常</p>
+<p>webbrowser有以下办法：</p>
+<p>webbrowser.open(url[, new=0[, autoraise=1]])</p>
+<p>这个办法是在默许的浏览器中显现url, 假如new = 0, 那么url会在同一个浏览器窗口下打开，假如new = 1, 会打开一个新的窗口，假如new = 2, 会打开一个新的tab, 假如autoraise ＝ true, 窗口会主动增加。</p>
+<p>webbrowser.open_new(url)</p>
+<p>在默许浏览器中打开一个新的窗口来显现url, 否则，在仅有的浏览器窗口中打开url</p>
+<p>webbrowser.open_new_tab(url)</p>
+<p>在默许浏览器中当开一个新的tab来显现url, 否则跟open_new()相同</p>
+<p>webbrowser.get([name]) 依据name返回一个浏览器目标，假如name为空，则返回默许的浏览器</p>
+<p>webbrowser.register(name, construtor[, instance])</p>
+<p>注册一个名字为name的浏览器，假如这个浏览器类型被注册就能够用get()办法来获取。</p>
+<h3 id="5-Python是如何进行类型转换的？"><a href="#5-Python是如何进行类型转换的？" class="headerlink" title="5.Python是如何进行类型转换的？"></a>5.Python是如何进行类型转换的？</h3><p><a href="http://canofy.iteye.com/blog/298263" target="_blank" rel="noopener">http://canofy.iteye.com/blog/298263</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">函数                      描述</span><br><span class="line">int(x [,base ])         将x转换为一个整数</span><br><span class="line">long(x [,base ])        将x转换为一个长整数</span><br><span class="line">float(x )               将x转换到一个浮点数</span><br><span class="line">complex(real [,imag ])  创建一个复数</span><br><span class="line">str(x )                 将对象 x 转换为字符串</span><br><span class="line">repr(x )                将对象 x 转换为表达式字符串</span><br><span class="line">eval(str )              用来计算在字符串中的有效Python表达式,并返回一个对象</span><br><span class="line">tuple(s )               将序列 s 转换为一个元组</span><br><span class="line">list(s )                将序列 s 转换为一个列表</span><br><span class="line">chr(x )                 将一个整数转换为一个字符</span><br><span class="line">unichr(x )              将一个整数转换为Unicode字符</span><br><span class="line">ord(x )                 将一个字符转换为它的整数值</span><br><span class="line">hex(x )                 将一个整数转换为一个十六进制字符串</span><br><span class="line">oct(x )                 将一个整数转换为一个八进制字符串</span><br></pre></td></tr></table></figure>
+<h3 id="6-请写出一段Python代码实现删除一个list里面的重复元素"><a href="#6-请写出一段Python代码实现删除一个list里面的重复元素" class="headerlink" title="6.请写出一段Python代码实现删除一个list里面的重复元素"></a>6.请写出一段Python代码实现删除一个list里面的重复元素</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>l = [<span class="number">1</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">4</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>list(set(l))</span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]</span><br><span class="line">或者</span><br><span class="line">d = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> mylist:</span><br><span class="line">    d[x] = <span class="number">1</span></span><br><span class="line">mylist = list(d.keys())</span><br></pre></td></tr></table></figure>
+<h4 id="7-Python如何实现单例模式？其他23种设计模式python如何实现？"><a href="#7-Python如何实现单例模式？其他23种设计模式python如何实现？" class="headerlink" title="7.Python如何实现单例模式？其他23种设计模式python如何实现？"></a>7.Python如何实现单例模式？其他23种设计模式python如何实现？</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#使用__metaclass__（元类）的高级python用法  </span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Singleton2</span><span class="params">(type)</span>:</span>  </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(cls, name, bases, dict)</span>:</span>  </span><br><span class="line">        super(Singleton2, cls).__init__(name, bases, dict)  </span><br><span class="line">        cls._instance = <span class="literal">None</span>  </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__call__</span><span class="params">(cls, *args, **kw)</span>:</span>  </span><br><span class="line">        <span class="keyword">if</span> cls._instance <span class="keyword">is</span> <span class="literal">None</span>:  </span><br><span class="line">            cls._instance = super(Singleton2, cls).__call__(*args, **kw)  </span><br><span class="line">        <span class="keyword">return</span> cls._instance  </span><br><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass3</span><span class="params">(object)</span>:</span>  </span><br><span class="line">    __metaclass__ = Singleton2  </span><br><span class="line"> </span><br><span class="line">one = MyClass3()  </span><br><span class="line">two = MyClass3()  </span><br><span class="line"> </span><br><span class="line">two.a = <span class="number">3</span>  </span><br><span class="line"><span class="keyword">print</span> one.a  </span><br><span class="line"><span class="comment">#3  </span></span><br><span class="line"><span class="keyword">print</span> id(one)  </span><br><span class="line"><span class="comment">#31495472  </span></span><br><span class="line"><span class="keyword">print</span> id(two)  </span><br><span class="line"><span class="comment">#31495472  </span></span><br><span class="line"><span class="keyword">print</span> one == two  </span><br><span class="line"><span class="comment">#True  </span></span><br><span class="line"><span class="keyword">print</span> one <span class="keyword">is</span> two  </span><br><span class="line"><span class="comment">#True</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#使用装饰器(decorator),  </span></span><br><span class="line"><span class="comment">#这是一种更pythonic,更elegant的方法,  </span></span><br><span class="line"><span class="comment">#单例类本身根本不知道自己是单例的,因为他本身(自己的代码)并不是单例的  </span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">singleton</span><span class="params">(cls, *args, **kw)</span>:</span>  </span><br><span class="line">    instances = &#123;&#125;  </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_singleton</span><span class="params">()</span>:</span>  </span><br><span class="line">        <span class="keyword">if</span> cls <span class="keyword">not</span> <span class="keyword">in</span> instances:  </span><br><span class="line">            instances[cls] = cls(*args, **kw)  </span><br><span class="line">        <span class="keyword">return</span> instances[cls]  </span><br><span class="line">    <span class="keyword">return</span> _singleton  </span><br><span class="line"> </span><br><span class="line"><span class="meta">@singleton  </span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass4</span><span class="params">(object)</span>:</span>  </span><br><span class="line">    a = <span class="number">1</span>  </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, x=<span class="number">0</span>)</span>:</span>  </span><br><span class="line">        self.x = x  </span><br><span class="line"> </span><br><span class="line">one = MyClass4()  </span><br><span class="line">two = MyClass4()  </span><br><span class="line"> </span><br><span class="line">two.a = <span class="number">3</span>  </span><br><span class="line"><span class="keyword">print</span> one.a  </span><br><span class="line"><span class="comment">#3  </span></span><br><span class="line"><span class="keyword">print</span> id(one)  </span><br><span class="line"><span class="comment">#29660784  </span></span><br><span class="line"><span class="keyword">print</span> id(two)  </span><br><span class="line"><span class="comment">#29660784  </span></span><br><span class="line"><span class="keyword">print</span> one == two  </span><br><span class="line"><span class="comment">#True  </span></span><br><span class="line"><span class="keyword">print</span> one <span class="keyword">is</span> two  </span><br><span class="line"><span class="comment">#True  </span></span><br><span class="line">one.x = <span class="number">1</span>  </span><br><span class="line"><span class="keyword">print</span> one.x  </span><br><span class="line"><span class="comment">#1  </span></span><br><span class="line"><span class="keyword">print</span> two.x  </span><br><span class="line"><span class="comment">#1</span></span><br></pre></td></tr></table></figure>
+<h3 id="8-Python里面如何拷贝一个对象？"><a href="#8-Python里面如何拷贝一个对象？" class="headerlink" title="8.Python里面如何拷贝一个对象？"></a>8.Python里面如何拷贝一个对象？</h3><p><a href="http://blog.csdn.net/sharkw/article/details/1934090" target="_blank" rel="noopener">http://blog.csdn.net/sharkw/article/details/1934090</a><br>标准库中的copy模块提供了两个方法来实现拷贝.一个方法是copy,它返回和参数包含内容一样的对象.<br>使用deepcopy方法,对象中的属性也被复制</p>
+<h3 id="9-介绍一下except的用法和作用？"><a href="#9-介绍一下except的用法和作用？" class="headerlink" title="9.介绍一下except的用法和作用？"></a>9.介绍一下except的用法和作用？</h3><p>Python的except用来捕获所有异常，因为Python里面的每次错误都会抛出一个异常，所以每个程序的错误都被当作一个运行时错误。</p>
+<h3 id="10-Python中pass语句的作用是什么？"><a href="#10-Python中pass语句的作用是什么？" class="headerlink" title="10.Python中pass语句的作用是什么？"></a>10.Python中pass语句的作用是什么？</h3><p>pass语句什么也不做，一般作为占位符或者创建占位程序，pass语句不会执行任何操作</p>
+<h3 id="11-如何知道一个python对象的类型？"><a href="#11-如何知道一个python对象的类型？" class="headerlink" title="11.如何知道一个python对象的类型？"></a>11.如何知道一个python对象的类型？</h3><p>type()</p>
+<h3 id="12-介绍一下Python下range-函数的用法？"><a href="#12-介绍一下Python下range-函数的用法？" class="headerlink" title="12.介绍一下Python下range()函数的用法？"></a>12.介绍一下Python下range()函数的用法？</h3><p><a href="http://docs.python.org/library/functions.html#range" target="_blank" rel="noopener">http://docs.python.org/library/functions.html#range</a><br>range(start, stop[, step])</p>
+<h3 id="13-如何用Python来进行查询和替换一个文本字符串？"><a href="#13-如何用Python来进行查询和替换一个文本字符串？" class="headerlink" title="13.如何用Python来进行查询和替换一个文本字符串？"></a>13.如何用Python来进行查询和替换一个文本字符串？</h3><p>可以使用sub()方法来进行查询和替换，sub方法的格式为：sub(replacement, string[, count=0])<br>replacement是被替换成的文本<br>string是需要被替换的文本<br>count是一个可选参数，指最大被替换的数量</p>
+<h3 id="14-python里面search-和match-的区别？"><a href="#14-python里面search-和match-的区别？" class="headerlink" title="14.python里面search()和match()的区别？"></a>14.python里面search()和match()的区别？</h3><p>match()函数只检测RE是不是在string的开始位置匹配，search()会扫描整个string查找匹配, 也就是说match()只有在0位置匹配成功的话才有返回，如果不是开始位置匹配成功的话，match()就返回none</p>
+<h3 id="15-用Python匹配HTML-tag的时候，-lt-gt-和-lt-gt-有什么区别？"><a href="#15-用Python匹配HTML-tag的时候，-lt-gt-和-lt-gt-有什么区别？" class="headerlink" title="15.用Python匹配HTML tag的时候，&lt;.&gt;和&lt;.?&gt;有什么区别？"></a>15.用Python匹配HTML tag的时候，&lt;.<em>&gt;和&lt;.</em>?&gt;有什么区别？</h3><p>前者是贪婪匹配，会从头到尾匹配 <a>xyz</a>，而后者是非贪婪匹配，只匹配到第一个 &gt;。</p>
+<h3 id="16-Python里面如何生成随机数？"><a href="#16-Python里面如何生成随机数？" class="headerlink" title="16.Python里面如何生成随机数？"></a>16.Python里面如何生成随机数？</h3><p>import random<br>random.random()<br>它会返回一个随机的0和1之间的浮点数</p>
+<h3 id="17-如何用Python来发送邮件？"><a href="#17-如何用Python来发送邮件？" class="headerlink" title="17.如何用Python来发送邮件？"></a>17.如何用Python来发送邮件？</h3><p>python实现发送和接收邮件功能主要用到poplib和smtplib模块。</p>
+<p>poplib用于接收邮件，而smtplib负责发送邮件。</p>
+<p>代码如下:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#! /usr/bin/env python</span></span><br><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"><span class="keyword">import</span> sys </span><br><span class="line"><span class="keyword">import</span> time </span><br><span class="line"><span class="keyword">import</span> poplib </span><br><span class="line"><span class="keyword">import</span> smtplib </span><br><span class="line"><span class="comment">#邮件发送函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">send_mail</span><span class="params">()</span>:</span> </span><br><span class="line">     <span class="keyword">try</span>: </span><br><span class="line">        handle = smtplib.SMTP(<span class="string">'smtp.126.com'</span>,<span class="number">25</span>) </span><br><span class="line">        handle.login(<span class="string">'XXXX@126.com'</span>,<span class="string">'**********'</span>) </span><br><span class="line">        msg = <span class="string">'To: XXXX@qq.com\r\nFrom:XXXX@126.com\r\nSubject:hello\r\n'</span></span><br><span class="line">        handle.sendmail(<span class="string">'XXXX@126.com'</span>,<span class="string">'XXXX@qq.com'</span>,msg) </span><br><span class="line">        handle.close() </span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">except</span>: </span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"><span class="comment">#邮件接收函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">accpet_mail</span><span class="params">()</span>:</span> </span><br><span class="line">    <span class="keyword">try</span>: </span><br><span class="line">        p=poplib.POP3(<span class="string">'pop.126.com'</span>) </span><br><span class="line">        p.user(<span class="string">'pythontab@126.com'</span>) </span><br><span class="line">        p.pass_(<span class="string">'**********'</span>) </span><br><span class="line">        ret = p.stat() <span class="comment">#返回一个元组:(邮件数,邮件尺寸) </span></span><br><span class="line">       <span class="comment">#p.retr('邮件号码')方法返回一个元组:(状态信息,邮件,邮件尺寸)   </span></span><br><span class="line">    <span class="keyword">except</span> poplib.error_proto,e: </span><br><span class="line">        <span class="keyword">print</span> <span class="string">"Login failed:"</span>,e </span><br><span class="line">        sys.exit(<span class="number">1</span>)</span><br><span class="line">    </span><br><span class="line"><span class="comment">#运行当前文件时，执行sendmail和accpet_mail函数</span></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>: </span><br><span class="line">    send_mail() </span><br><span class="line">    accpet_mail()</span><br></pre></td></tr></table></figure>
+<h3 id="18-Python如何定义一个函数"><a href="#18-Python如何定义一个函数" class="headerlink" title="18.Python如何定义一个函数?"></a>18.Python如何定义一个函数?</h3><p>定义函数的格式是: def functionName(arg):</p>
+<h3 id="19-有没有一个工具可以帮助查找python的bug和进行静态的代码分析？"><a href="#19-有没有一个工具可以帮助查找python的bug和进行静态的代码分析？" class="headerlink" title="19.有没有一个工具可以帮助查找python的bug和进行静态的代码分析？"></a>19.有没有一个工具可以帮助查找python的bug和进行静态的代码分析？</h3><p>pycheck pylint </p>
+<h3 id="20-如何在一个function里面设置一个全局的变量？"><a href="#20-如何在一个function里面设置一个全局的变量？" class="headerlink" title="20.如何在一个function里面设置一个全局的变量？"></a>20.如何在一个function里面设置一个全局的变量？</h3><p>global</p>
+<h3 id="21-有两个序列a-b，大小都为n-序列元素的值任意整形数，无序；"><a href="#21-有两个序列a-b，大小都为n-序列元素的值任意整形数，无序；" class="headerlink" title="21.有两个序列a,b，大小都为n,序列元素的值任意整形数，无序；"></a>21.有两个序列a,b，大小都为n,序列元素的值任意整形数，无序；</h3><p>要求：通过交换a,b中的元素，使[序列a元素的和]与[序列b元素的和]之间的差最小。</p>
+<ol>
+<li>分别计算a,b序列的和；</li>
+<li>求a序列和与b序列和的差值的一半，记为half；</li>
+<li>在和值大的序列中找出一个与和值小的序列中的元素max的差值最接近half的元素，记为min；</li>
+<li>将max与min互换即可。</li>
+</ol>
+<h3 id="22-如何用Python删除一个文件？"><a href="#22-如何用Python删除一个文件？" class="headerlink" title="22.如何用Python删除一个文件？"></a>22.如何用Python删除一个文件？</h3><p>使用os.remove(filename)或者os.unlink(filename);</p>
+<h3 id="23-Python如何copy一个文件？"><a href="#23-Python如何copy一个文件？" class="headerlink" title="23.Python如何copy一个文件？"></a>23.Python如何copy一个文件？</h3><p>shutil模块有一个copyfile函数可以实现文件拷贝</p>
+<h3 id="24-python程序中文输出问题怎么解决？"><a href="#24-python程序中文输出问题怎么解决？" class="headerlink" title="24.python程序中文输出问题怎么解决？"></a>24.python程序中文输出问题怎么解决？</h3><p>用encode和decode<br>如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os.path</span><br><span class="line"><span class="keyword">import</span> xlrd,sys</span><br><span class="line"></span><br><span class="line">Filename=’/home/tom/Desktop/<span class="number">1234.</span>xls’</span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> os.path.isfile(Filename):</span><br><span class="line">    <span class="keyword">raise</span> NameError,”%s <span class="keyword">is</span> <span class="keyword">not</span> a valid filename”%Filename</span><br><span class="line"></span><br><span class="line">bk=xlrd.open_workbook(Filename)</span><br><span class="line">shxrange=range(bk.nsheets)</span><br><span class="line"><span class="keyword">print</span> shxrange</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> shxrange:</span><br><span class="line">    p=bk.sheets()[x].name.encode(‘utf<span class="number">-8</span>′)</span><br><span class="line">    <span class="keyword">print</span> p.decode(‘utf<span class="number">-8</span>′)</span><br></pre></td></tr></table></figure>
+<p>方法二：<br>在文件开头加上</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">reload(sys)</span><br><span class="line">sys.setdefaultencoding(‘utf8′)</span><br></pre></td></tr></table></figure>
+<h3 id="25-python代码得到列表list的交集与差集"><a href="#25-python代码得到列表list的交集与差集" class="headerlink" title="25.python代码得到列表list的交集与差集"></a>25.python代码得到列表list的交集与差集</h3><p>交集</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">b1=[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line">b2=[<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>]</span><br><span class="line">b3 = [val <span class="keyword">for</span> val <span class="keyword">in</span> b1 <span class="keyword">if</span> val <span class="keyword">in</span> b2]</span><br><span class="line"><span class="keyword">print</span> b3</span><br></pre></td></tr></table></figure>
+<p>差集</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">b1=[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line">b2=[<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>]</span><br><span class="line">b3 = [val <span class="keyword">for</span> val <span class="keyword">in</span> b1 <span class="keyword">if</span> val <span class="keyword">not</span> <span class="keyword">in</span> b2]</span><br><span class="line"><span class="keyword">print</span> b3</span><br></pre></td></tr></table></figure>
+<h3 id="26-写一个简单的python-socket编程"><a href="#26-写一个简单的python-socket编程" class="headerlink" title="26.写一个简单的python socket编程"></a>26.写一个简单的python socket编程</h3><p>python 编写server的步骤：<br>1.第一步是创建socket对象。调用socket构造函数。如：</p>
+<p>socket = socket.socket( family, type )<br>family参数代表地址家族，可为AF_INET或AF_UNIX。AF_INET家族包括Internet地址，AF_UNIX家族用于同一台机器上的进程间通信。<br>type参数代表套接字类型，可为SOCK_STREAM(流套接字)和SOCK_DGRAM(数据报套接字)。<br>2.第二步是将socket绑定到指定地址。这是通过socket对象的bind方法来实现的：</p>
+<p>socket.bind( address )<br>由AF_INET所创建的套接字，address地址必须是一个双元素元组，格式是(host,port)。host代表主机，port代表端口号。如果端口号正在使用、主机名不正确或端口已被保留，bind方法将引发socket.error异常。<br>3.第三步是使用socket套接字的listen方法接收连接请求。<br>socket.listen( backlog )<br>backlog指定最多允许多少个客户连接到服务器。它的值至少为1。收到连接请求后，这些请求需要排队，如果队列满，就拒绝请求。<br>4.第四步是服务器套接字通过socket的accept方法等待客户请求一个连接。<br>connection, address = socket.accept()<br>调用accept方法时，socket会进入“waiting”状态。客户请求连接时，方法建立连接并返回服务器。accept方法返回一个含有两个元素的元组(connection,address)。第一个元素connection是新的socket对象，服务器必须通过它与客户通信；第二个元素 address是客户的Internet地址。<br>5.第五步是处理阶段，服务器和客户端通过send和recv方法通信(传输 数据)。服务器调用send，并采用字符串形式向客户发送信息。send方法返回已发送的字符个数。服务器使用recv方法从客户接收信息。调用recv 时，服务器必须指定一个整数，它对应于可通过本次方法调用来接收的最大数据量。recv方法在接收数据时会进入“blocked”状态，最后返回一个字符 串，用它表示收到的数据。如果发送的数据量超过了recv所允许的，数据会被截短。多余的数据将缓冲于接收端。以后调用recv时，多余的数据会从缓冲区 删除(以及自上次调用recv以来，客户可能发送的其它任何数据)。<br>6. 传输结束，服务器调用socket的close方法关闭连接。</p>
+<p>python编写client的步骤：</p>
+<ol>
+<li>创建一个socket以连接服务器：socket = socket.socket( family, type )</li>
+<li>使用socket的connect方法连接服务器。对于AF_INET家族,连接格式如下：<br>socket.connect( (host,port) )<br>host代表服务器主机名或IP，port代表服务器进程所绑定的端口号。如连接成功，客户就可通过套接字与服务器通信，如果连接失败，会引发socket.error异常。</li>
+<li>处理阶段，客户和服务器将通过send方法和recv方法通信。</li>
+<li>传输结束，客户通过调用socket的close方法关闭连接。<br>下面给个简单的例子：<br>server.py<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span><br><span class="line">    sock.bind((<span class="string">'localhost'</span>, <span class="number">8001</span>))</span><br><span class="line">    sock.listen(<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        connection,address = sock.accept()</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            connection.settimeout(<span class="number">5</span>)</span><br><span class="line">            buf = connection.recv(<span class="number">1024</span>)</span><br><span class="line">            <span class="keyword">if</span> buf == <span class="string">'1'</span>:</span><br><span class="line">                connection.send(<span class="string">'welcome to server!'</span>)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                connection.send(<span class="string">'please go out!'</span>)</span><br><span class="line">        <span class="keyword">except</span> socket.timeout:</span><br><span class="line">            <span class="keyword">print</span> <span class="string">'time out'</span></span><br><span class="line"></span><br><span class="line">        connection.close()</span><br></pre></td></tr></table></figure>
+client.py<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span><br><span class="line">    sock.connect((<span class="string">'localhost'</span>, <span class="number">8001</span>))</span><br><span class="line">    time.sleep(<span class="number">2</span>)</span><br><span class="line">    sock.send(<span class="string">'1'</span>)</span><br><span class="line">    <span class="keyword">print</span> sock.recv(<span class="number">1024</span>)</span><br><span class="line">    sock.close()</span><br></pre></td></tr></table></figure>
+<h3 id="27-python如何捕获异常"><a href="#27-python如何捕获异常" class="headerlink" title="27.python如何捕获异常"></a>27.python如何捕获异常</h3>(1）使用try和except语句来捕获异常<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:  </span><br><span class="line">       block  </span><br><span class="line">    <span class="keyword">except</span> [exception,[data…]]:  </span><br><span class="line">       block  </span><br><span class="line">     </span><br><span class="line">    <span class="keyword">try</span>:  </span><br><span class="line">    block  </span><br><span class="line">    <span class="keyword">except</span> [exception,[data...]]:  </span><br><span class="line">       block  </span><br><span class="line">    <span class="keyword">else</span>:  </span><br><span class="line">       block</span><br></pre></td></tr></table></figure>
+捕获到的IOError错误的详细原因会被放置在对象e中,然后运行该python 异常处理的except代码块捕获所有的异常</li>
+</ol>
+<p>（2）用raise语句手工引发一个异常:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">raise</span> [exception[,data]]  </span><br><span class="line"><span class="keyword">try</span>:  </span><br><span class="line">    <span class="keyword">raise</span> MyError <span class="comment">#自己抛出一个异常  </span></span><br><span class="line"><span class="keyword">except</span> MyError:  </span><br><span class="line">    <span class="keyword">print</span> <span class="string">'a error'</span>  </span><br><span class="line"><span class="keyword">raise</span> ValueError,’invalid argument’</span><br></pre></td></tr></table></figure>
+<p>3）采用sys模块回溯最后的异常</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys  </span><br><span class="line"><span class="keyword">try</span>:  </span><br><span class="line">    block  </span><br><span class="line"><span class="keyword">except</span>:  </span><br><span class="line">    info=sys.exc_info()  </span><br><span class="line">    <span class="keyword">print</span> info[<span class="number">0</span>],<span class="string">":"</span>,info[<span class="number">1</span>]</span><br></pre></td></tr></table></figure>
+<h3 id="28-src-“security-afafsff-ip-123-4-56-78-amp-id-45”，请写一段代码用正则匹配出ip"><a href="#28-src-“security-afafsff-ip-123-4-56-78-amp-id-45”，请写一段代码用正则匹配出ip" class="headerlink" title="28.src = “security/afafsff/?ip=123.4.56.78&amp;id=45”，请写一段代码用正则匹配出ip"></a>28.src = “security/afafsff/?ip=123.4.56.78&amp;id=45”，请写一段代码用正则匹配出ip</h3><p>匹配ip地址的python正则表达式</p>
+<p>pattern =’^([01]?\d\d?|2[0-4]\d|25[0-5]).([01]?\d\d?|2[0-4]\d|25[0-5]).([01]?\d\d?|2[0-4]\d|25[0-5]).([01]?\d\d?|2[0-4]\d|25[0-5])$’<br>故本题答案</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">re.findall(<span class="string">r'([01]?\d\d?|2[0-4]\d|25[0-5])\.([01]?\d\d?|2[0-4]\d|25[0-5])\.([01]?\d\d?|2[0-4]\d|25[0-5])\.([01]?\d\d?|2[0-4]\d|25[0-5])'</span>, src)</span><br><span class="line"><span class="comment">#[('123', '4', '56', '78')]</span></span><br></pre></td></tr></table></figure>
+<h3 id="29-写一段代码用json数据的处理方式获取-“persons”-“name”-”yu”-”age”-”23”-“name”-”zhang”-”age”-”34”-这一段json中第一个人的名字。"><a href="#29-写一段代码用json数据的处理方式获取-“persons”-“name”-”yu”-”age”-”23”-“name”-”zhang”-”age”-”34”-这一段json中第一个人的名字。" class="headerlink" title="29.写一段代码用json数据的处理方式获取{“persons”:[{“name”:”yu”,”age”:”23”},{“name”:”zhang”,”age”:”34”}]}这一段json中第一个人的名字。"></a>29.写一段代码用json数据的处理方式获取{“persons”:[{“name”:”yu”,”age”:”23”},{“name”:”zhang”,”age”:”34”}]}这一段json中第一个人的名字。</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">json读取</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> json</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>j = json.loads(<span class="string">'&#123;"persons":[&#123;"name":"yu","age":"23"&#125;,&#123;"name":"zhang","age":"34"&#125;]&#125;'</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">print</span> j</span><br><span class="line">&#123;<span class="string">u'persons'</span>: [&#123;<span class="string">u'age'</span>: <span class="string">u'23'</span>, <span class="string">u'name'</span>: <span class="string">u'yu'</span>&#125;, &#123;<span class="string">u'age'</span>: <span class="string">u'34'</span>, <span class="string">u'name'</span>: <span class="string">u'zhang'</span>&#125;]&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">print</span> j.keys()</span><br><span class="line">[<span class="string">u'persons'</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">print</span> j.values()</span><br><span class="line">[[&#123;<span class="string">u'age'</span>: <span class="string">u'23'</span>, <span class="string">u'name'</span>: <span class="string">u'yu'</span>&#125;, &#123;<span class="string">u'age'</span>: <span class="string">u'34'</span>, <span class="string">u'name'</span>: <span class="string">u'zhang'</span>&#125;]]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">print</span> j.values()[<span class="number">0</span>]</span><br><span class="line">[&#123;<span class="string">u'age'</span>: <span class="string">u'23'</span>, <span class="string">u'name'</span>: <span class="string">u'yu'</span>&#125;, &#123;<span class="string">u'age'</span>: <span class="string">u'34'</span>, <span class="string">u'name'</span>: <span class="string">u'zhang'</span>&#125;]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">print</span> j.values()[<span class="number">0</span>][<span class="number">0</span>]</span><br><span class="line">&#123;<span class="string">u'age'</span>: <span class="string">u'23'</span>, <span class="string">u'name'</span>: <span class="string">u'yu'</span>&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">print</span> j.values()[<span class="number">0</span>][<span class="number">0</span>][<span class="string">'name'</span>]</span><br><span class="line">yu</span><br></pre></td></tr></table></figure>
+<h3 id="30-平衡点问题"><a href="#30-平衡点问题" class="headerlink" title="30.平衡点问题"></a>30.平衡点问题</h3><p>平衡点：比如int[] numbers = {1,3,5,7,8,25,4,20}; 25前面的总和为24，25后面的总和也是24，25这个点就是平衡点；假如一个数组中的元素，其前面的部分等于后面的部分，那么这个点的位序就是平衡点<br>要求：返回任何一个平衡点</p>
+<p>使用sum函数累加所有的数。<br>使用一个变量fore来累加序列的前部。直到满足条件fore&lt;(total-number)/2;<br>python代码如下:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">numbers = [<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">2</span>,<span class="number">4</span>,<span class="number">20</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment">#find total</span></span><br><span class="line">total=sum(numbers)</span><br><span class="line"></span><br><span class="line"><span class="comment">#find num</span></span><br><span class="line">fore=<span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> number <span class="keyword">in</span> numbers:</span><br><span class="line">   <span class="keyword">if</span> fore&lt;(total-number)/<span class="number">2</span> :</span><br><span class="line">      fore+=number</span><br><span class="line">   <span class="keyword">else</span>:</span><br><span class="line">      <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#print answer</span></span><br><span class="line"><span class="keyword">if</span> fore == (total-number)/<span class="number">2</span> :</span><br><span class="line">   <span class="keyword">print</span> number</span><br><span class="line"><span class="keyword">else</span> :</span><br><span class="line">   <span class="keyword">print</span> <span class="string">r'not found'</span></span><br></pre></td></tr></table></figure>
+<p>算法简单，而且是O(n)的，12行代码搞定。参考<a href="http://blog.renren.com/share/235087438/3004327956" target="_blank" rel="noopener">http://blog.renren.com/share/235087438/3004327956</a></p>
+<h3 id="31-支配点问题："><a href="#31-支配点问题：" class="headerlink" title="31.支配点问题："></a>31.支配点问题：</h3><p>支配数：数组中某个元素出现的次数大于数组总数的一半时就成为支配数，其所在位序成为支配点；比如int[] a = {3,3,1,2,3};3为支配数，0，1，4分别为支配点；<br>要求：返回任何一个支配点</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">li = [<span class="number">3</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line">     mid = len(li)/<span class="number">2</span></span><br><span class="line">     <span class="keyword">for</span> l <span class="keyword">in</span> li:</span><br><span class="line">         count = <span class="number">0</span></span><br><span class="line">         i = <span class="number">0</span></span><br><span class="line">         mark = <span class="number">0</span></span><br><span class="line">         <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">             <span class="keyword">if</span> l == li[i]:</span><br><span class="line">                 count += <span class="number">1</span></span><br><span class="line">                 temp = i</span><br><span class="line">             i += <span class="number">1</span></span><br><span class="line">             <span class="keyword">if</span> count &gt; mid:</span><br><span class="line">                 mark = temp</span><br><span class="line">                 <span class="keyword">return</span> (mark,li[mark])</span><br><span class="line">             <span class="keyword">if</span> i &gt; len(li) - <span class="number">1</span>:</span><br><span class="line">                 <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    <span class="keyword">print</span>  main()</span><br></pre></td></tr></table></figure>
+<h3 id="32-什么是PEP-8"><a href="#32-什么是PEP-8" class="headerlink" title="32.什么是PEP 8"></a>32.什么是PEP 8</h3><p>参考：<a href="http://www.python.org/dev/peps/pep-0008/" target="_blank" rel="noopener">http://www.python.org/dev/peps/pep-0008/</a></p>
+<h3 id="33-Python2-x和Python3-x的区别"><a href="#33-Python2-x和Python3-x的区别" class="headerlink" title="33.Python2.x和Python3.x的区别"></a>33.Python2.x和Python3.x的区别</h3><p>从Python2到Python3，很多基本的函数接口变了，甚至是，有些库或函数被去掉了，改名了。</p>
+<p>参考：<a href="http://www.cnblogs.com/codingmylife/archive/2010/06/06/1752807.html" target="_blank" rel="noopener">http://www.cnblogs.com/codingmylife/archive/2010/06/06/1752807.html</a></p>
+<h3 id="1-Python-的特点和优点是什么"><a href="#1-Python-的特点和优点是什么" class="headerlink" title="1. Python 的特点和优点是什么?"></a>1. Python 的特点和优点是什么?</h3><p>Python 可以作为编程的入门语言，因为他具备以下特质：</p>
+<ol>
+<li><p>解释性</p>
+</li>
+<li><p>动态特性</p>
+</li>
+<li><p>面向对象</p>
+</li>
+<li><p>语法简洁</p>
+</li>
+<li><p>开源</p>
+</li>
+<li><p>丰富的社区资源</p>
+</li>
+</ol>
+<p>实际上 Python 的优点远不止这些，更详细的介绍可以阅读 Introduction to Python（ <a href="https://data-flair.training/blogs/python-tutorial/）" target="_blank" rel="noopener">https://data-flair.training/blogs/python-tutorial/）</a></p>
+<h3 id="2-Python-中如何实现多线程？"><a href="#2-Python-中如何实现多线程？" class="headerlink" title="2.Python 中如何实现多线程？"></a>2.Python 中如何实现多线程？</h3><p>线程是轻量级的进程，多线程允许一次执行多个线程。众所周知，Python 是一种多线程语言，它有一个多线程包。</p>
+<p>GIL（全局解释器锁）确保一次执行单个线程。一个线程保存 GIL 并在将其传递给下一个线程之前执行一些操作，这就产生了并行执行的错觉。但实际上，只是线程轮流在 CPU 上。当然，所有传递都会增加执行的开销。</p>
+<h3 id="3-解释继承"><a href="#3-解释继承" class="headerlink" title="3.解释继承"></a>3.解释继承</h3><p>一个类继承自另一个类，也可以说是一个孩子类/派生类/子类，继承自父类/基类/超类，同时获取所有的类成员（属性和方法）。</p>
+<p>继承使我们可以重用代码，并且还可以更方便地创建和维护代码。Python 支持以下类型的继承：</p>
+<ol>
+<li><p>单继承- 一个子类类继承自单个基类</p>
+</li>
+<li><p>多重继承- 一个子类继承自多个基类</p>
+</li>
+<li><p>多级继承- 一个子类继承自一个基类，而基类继承自另一个基类</p>
+</li>
+<li><p>分层继承- 多个子类继承自同一个基类</p>
+</li>
+<li><p>混合继承- 两种或两种以上继承类型的组合</p>
+</li>
+</ol>
+<p>关于继承的更多内容参考 Python Inheritance（ <a href="https://data-flair.training/blogs/python-inheritance/）" target="_blank" rel="noopener">https://data-flair.training/blogs/python-inheritance/）</a></p>
+<h3 id="4-什么是-Flask？"><a href="#4-什么是-Flask？" class="headerlink" title="4.什么是 Flask？"></a>4.什么是 Flask？</h3><p>Flask 是一个使用 Python 编写的轻量级 Web 应用框架，使用 BSD 授权。其 WSGI 工具箱采用 Werkzeug，模板引擎则使用 Jinja2。除了 Werkzeug 和 Jinja2 以外几乎不依赖任何外部库。因为 Flask 被称为轻量级框架。</p>
+<p>Flask 的会话会话使用签名 cookie 来允许用户查看和修改会话内容。它会记录从一个请求到另一个请求的信息。但如果要修改会话，则必须有密钥 Flask.secret_key。</p>
+<h3 id="5-如何在-Python-中管理内存"><a href="#5-如何在-Python-中管理内存" class="headerlink" title="5.如何在 Python 中管理内存?"></a>5.如何在 Python 中管理内存?</h3><p>Python 用一个私有堆内存空间来放置所有对象和数据结构，我们无法访问它。由解释器来管理它。不过使用一些核心 API，我们可以访问一些 Python 内存管理工具控制内存分配。</p>
+<h3 id="6-当退出-Python-时是否释放所有内存分配？"><a href="#6-当退出-Python-时是否释放所有内存分配？" class="headerlink" title="6.当退出 Python 时是否释放所有内存分配？"></a>6.当退出 Python 时是否释放所有内存分配？</h3><p>答案是否定的。那些具有对象循环引用或者全局命名空间引用的变量，在 Python 退出是往往不会被释放</p>
+<p>另外不会释放 C 库保留的部分内容。</p>
+<h3 id="7-能否解释一下-args-和-kwargs"><a href="#7-能否解释一下-args-和-kwargs" class="headerlink" title="7.能否解释一下 args 和 *kwargs?"></a>7.能否解释一下 <em>args 和 *</em>kwargs?</h3><p>如果我们不知道将多少个参数传递给函数，比如当我们想传递一个列表或一个元组值时，就可以使用<em>args。<br>当我们不知道将会传入多少关键字参数时，使用*</em>kwargs 会收集关键字参数。<br>使用 args 和 kwargs 作为参数名只是举例，可以任意替换。</p>
+<h3 id="8-Python-中标识符的命名规则？"><a href="#8-Python-中标识符的命名规则？" class="headerlink" title="8.Python 中标识符的命名规则？"></a>8.Python 中标识符的命名规则？</h3><p>Python 中的标识符可以是任意长度，但必须遵循以下命名规则:</p>
+<ol>
+<li>只能以下划线或者 A-Z/a-z 中的字母开头。</li>
+<li>其余部分只能使用 A-Z/a-z/0-9。</li>
+<li>Python 标识符区分大小写。</li>
+<li>关键字不能作为标识符。<h3 id="9-请解释-Python-中的闭包？"><a href="#9-请解释-Python-中的闭包？" class="headerlink" title="9.请解释 Python 中的闭包？"></a>9.请解释 Python 中的闭包？</h3>如果在一个内部函数里。对在外部作用域（但不是在全局作用域）的变量进行引用，那么内部函数就是一个闭包。<br>闭包的详细解释请点击 Closures in Python。（<a href="https://data-flair.training/blogs/python-closure/）" target="_blank" rel="noopener">https://data-flair.training/blogs/python-closure/）</a><h3 id="10-大数据的文件读取"><a href="#10-大数据的文件读取" class="headerlink" title="10.大数据的文件读取"></a>10.大数据的文件读取</h3>利用生成器generator<br>迭代器进行迭代遍历：for line in file<h3 id="11-迭代器和生成器的区别"><a href="#11-迭代器和生成器的区别" class="headerlink" title="11.迭代器和生成器的区别"></a>11.迭代器和生成器的区别</h3>迭代器是一个更加抽象的概念，任何对象，如果它的类有next方法和iter方法返回自身。对于string、list、dict、tuple等这类容器对象，使用for循环遍历是很方便的。在后台for语句对容器对象调用iter()函数，iter()是Python的内置函数。iter()会返回一个定义了next()方法的迭代器对象，它在容器中逐个访问容器内元素，next()也是python的内置函数。在没有后续元素时，next()会抛出一个StopIterration的异常。<br>生成器（Generator）是创建迭代器的简单而强大的工具。它们写起来就像是正规的函数，只是在返回数据的时候需要使用yield语句。每次next()被调用时，生成器会返回它脱离的位置（它记忆语句最后一次执行的位置和所有的数据值）<br>区别：生成器能做到迭代器能做的所有事，而且因为自动创建了<strong>iter</strong>()和next()方法，生成器显得特别简洁，而且生成器也是高效的，使用生成器表达式取代列表解析可以同时节省内存。除了创建和保持程序状态的自动生成，当发生器终结时，还会自动跑出StopIterration异常。<h3 id="12-装饰器的作用和功能"><a href="#12-装饰器的作用和功能" class="headerlink" title="12.装饰器的作用和功能"></a>12.装饰器的作用和功能</h3>引入日志<br>函数执行时间统计<br>执行函数钱预备处理<br>执行函数后的清理功能<br>权限校验等场景<br>缓存<h3 id="13-简单谈下GIL"><a href="#13-简单谈下GIL" class="headerlink" title="13.简单谈下GIL"></a>13.简单谈下GIL</h3>Global Interpreter Lock（全局解释器锁）<br> Python代码的执行由python虚拟机（也叫解释器主循环，CPython版本）来控制，Python在设计之初就考虑到要在解释器的主循环中，同时只有一个线程在执行，即任意时刻，只有一个线程在解释器中运行。对Python虚拟机的访问由全局解释器锁（GIL）来控制，正是这个锁能保证同一时刻只有一个线程在运行。<br>在多线程环境中，Python虚拟机按以下方式执行：</li>
+<li>设置GIL</li>
+<li>切换到一个线程去运行</li>
+<li>运行：<br>a.指定数量的字节码指令，或者<br>b.线程主动让出控制（可以调用time.sleep(0)）</li>
+<li>把线程设置为睡眠状态</li>
+<li>解锁GIL</li>
+<li>再次重复以上所有步骤<br>再调用外部代码（如C/C++扩展函数）的时候，GIL讲会被锁定，直到这个函数结束为止（由于在这期间没有Python的字节码被运行，所以不会做线程切换）。<h3 id="14-find和grep"><a href="#14-find和grep" class="headerlink" title="14.find和grep"></a>14.find和grep</h3>grep命令是一种强大的文本搜索工具，grep所有内容串可以是正则表达式，允许对文本文件进行模式查找。如果找到匹配模式，grep打印包含模式的所有行。</li>
+</ol>
+<p>find通常用来在特定的目录下搜索符合条件的文件，也可以用来搜索特定用户属主的文件。</p>
+<h3 id="15-线上服务可能因为种种原因导致挂掉怎么办？"><a href="#15-线上服务可能因为种种原因导致挂掉怎么办？" class="headerlink" title="15.线上服务可能因为种种原因导致挂掉怎么办？"></a>15.线上服务可能因为种种原因导致挂掉怎么办？</h3><p>Linux下的后台进程管理利器supervisor</p>
+<p>每次文件修改后在linux执行service supervisord restart</p>
+<h3 id="16-如何提高python的运行效率"><a href="#16-如何提高python的运行效率" class="headerlink" title="16.如何提高python的运行效率"></a>16.如何提高python的运行效率</h3><p>使用生成器；关键代码使用外部功能包（Cython，pylnlne，pypy，pyrex）；针对循环的优化–尽量避免在循环中访问变量的属性</p>
+<h3 id="17-Python中的yield用法"><a href="#17-Python中的yield用法" class="headerlink" title="17.Python中的yield用法"></a>17.Python中的yield用法</h3><p>yield简单来说就是一个生成器，这样函数它记住上次返回时在函数中的位置。对于生成器第二次（或n次）调用跳转至该函数。</p>
+<h3 id="18-Python是如何进行内存管理的"><a href="#18-Python是如何进行内存管理的" class="headerlink" title="18.Python是如何进行内存管理的"></a>18.Python是如何进行内存管理的</h3><p>一、垃圾回收：<br>   python不像C++，Java等语言一样，他们可以不用事先声明变量类型而直接对变量进行赋值。对python语言来讲，对象的类型和内存都是在运行时确定的。这也是为什么我们称python语言为动态类型的原因（这里我们把动态类型语言可以简单的归结为对变量内存地址的分配是在运行时自动判断变量类型并对变量进行赋值）。</p>
+<p>二、引用计数：<br> python采用了类似windows内核对象一样的方式来对内存进行管理。每一个对象，都维护这一个对指向该对象的引用的计数。当变量被绑定在一个对象上的时候，该变量的引用计数就是1，（还有另外一些情况也会导致变量引用计数的增加），系统会自动维护这些标签，并定时扫描，当某标签的引用计数变为0的时候，该对象就会被回收。</p>
+<p>三、内存池机制<br>python的内存机制成金字塔形：<br>第-1，-2层主要有操作系统进行操作；<br>第0层是C中的malloc，free等内存分配和释放函数进行操作；<br>第1层和第2层是内存池，有python的接口函数PyMem_Malloc函数实现，当对象小于256字节时由该层直接分配内存；<br>第三层是最上层，也就是我们对python对象的直接操作；<br>在C中如果频繁的调用malloc与free时，是会产生性能问题的，在加上频繁的分配和释放小块的内存会产生内存碎片。<br>python在这里主要干的工作有：<br>如果请求分配的内存在1~256字节之间就使用自己的内存管理系统，否则直接使用malloc。<br>这里还是会调用malloc分配内存，但每次回分配一块大小为256字节的大块内存。<br>经由内存池登记的内存到最后还是会回收到内存池，并不会调用C的free释放掉，以便下次使用。对于简单的python对象，例如数值、字符串、元组（tuple不允许被更改）采用的是复制的方式（深拷贝），也就是说当讲另一个变量B赋值给变量A时，虽然A和B的内存空间仍然相同，但是当A的值发生变化时，会重新给A分配空间，A和B的地址变得不再相同。</p>
+<h3 id="19-描述数组、链表、队列、堆栈的区别？"><a href="#19-描述数组、链表、队列、堆栈的区别？" class="headerlink" title="19.描述数组、链表、队列、堆栈的区别？"></a>19.描述数组、链表、队列、堆栈的区别？</h3><p>数组和链表是数据存储方式的概念，数组在连续的空间中存储数据，而链表可以在非连续的空间中存储数据；</p>
+<p>队列和堆栈是描述数据存取方式的概念，队列是先进先出，而堆栈是后进先出；队列和堆栈可以用数组来实现，也可以用链表实现。</p>
+<h2 id="web框架部分"><a href="#web框架部分" class="headerlink" title="web框架部分"></a>web框架部分</h2><h3 id="1-django-中当一个用户登录-A-应用服务器（进入登录状态），然后下次请求被-nginx-代理到-B-应用服务器会出现什么影响？"><a href="#1-django-中当一个用户登录-A-应用服务器（进入登录状态），然后下次请求被-nginx-代理到-B-应用服务器会出现什么影响？" class="headerlink" title="1.django 中当一个用户登录 A 应用服务器（进入登录状态），然后下次请求被 nginx 代理到 B 应用服务器会出现什么影响？"></a>1.django 中当一个用户登录 A 应用服务器（进入登录状态），然后下次请求被 nginx 代理到 B 应用服务器会出现什么影响？</h3><p>如果用户在A应用服务器登陆的session数据没有共享到B应用服务器，那用户之前的登录状态就没有了。</p>
+<h3 id="2-跨域请求问题django怎么解决的（原理）"><a href="#2-跨域请求问题django怎么解决的（原理）" class="headerlink" title="2.跨域请求问题django怎么解决的（原理）"></a>2.跨域请求问题django怎么解决的（原理）</h3><p>启用中间件</p>
+<p>post请求</p>
+<p>验证码</p>
+<p>表单中添加标签</p>
+<h3 id="3-请解释或描述一下Django的架构"><a href="#3-请解释或描述一下Django的架构" class="headerlink" title="3.请解释或描述一下Django的架构"></a>3.请解释或描述一下Django的架构</h3><p>对于Django框架遵循MVC设计，并且有一个专有的名词：MVT</p>
+<p>M全拼为Model，与MVC中的M功能相同，负责数据处理，内嵌了ORM框架</p>
+<p>V全拼为View，与MVC中的C功能相同，接收HttpRequest，业务处理，返回HttpReponse</p>
+<p>T全拼为Template，与MVC中的V功能相同，负责封装构造要返回的html，内嵌了模板引擎</p>
+<h3 id="4-django对数据查询结果排序怎么做，降序怎么做，查询大于某个字段怎么做"><a href="#4-django对数据查询结果排序怎么做，降序怎么做，查询大于某个字段怎么做" class="headerlink" title="4.django对数据查询结果排序怎么做，降序怎么做，查询大于某个字段怎么做"></a>4.django对数据查询结果排序怎么做，降序怎么做，查询大于某个字段怎么做</h3><p>排序使用order_by()</p>
+<p>降序需要在排序字段名前加-</p>
+<p>查询字段大于某个值：使用filter（字段名_gt=值）</p>
+<h3 id="5-说一下Django，MIDDLEWARES中间件的作用？"><a href="#5-说一下Django，MIDDLEWARES中间件的作用？" class="headerlink" title="5.说一下Django，MIDDLEWARES中间件的作用？"></a>5.说一下Django，MIDDLEWARES中间件的作用？</h3><p>中间件是介于request和response处理之间的一道处理过程，相对比较轻量级，并且在全局上改变Django的输入和输出</p>
+<h3 id="6-你对Django的认识？"><a href="#6-你对Django的认识？" class="headerlink" title="6.你对Django的认识？"></a>6.你对Django的认识？</h3><p>Django是走大而全的方向，它最出名的是全自动化的管理后台；只需要使用ORM，做简单的对象定义，它就能自动生成数据库结构、以及全功能的管理后台。</p>
+<p>Django内置的ORM跟框架内的其他模块耦合程度高</p>
+<p>应用程序必须使用Django内置的ORM，否则就不能享受到框架内提供的种种基于其ORM的便利。理论上可以切换掉其ORM模块，但这就相当于要把装修完毕的房子拆除重新装修，倒不如一开始就去毛坯房做全新的装修。</p>
+<p>Django的卖点是超高的开发效率，其性能扩展有限；采用Django的项目，在流量达到一定规模后，都需要对其进行重构，才能满足性能的要求。</p>
+<p>Django适用的是中小型的网站，或者是作为大型网站快速实现产品雏形的工具。</p>
+<p>Django模板的设计哲学是彻底的将代码、样式分离； Django从根本上杜绝在模板中进行编码、处理数据的可能。</p>
+<h3 id="7-Django重定向你是如何实现的？用的什么状态码？"><a href="#7-Django重定向你是如何实现的？用的什么状态码？" class="headerlink" title="7.Django重定向你是如何实现的？用的什么状态码？"></a>7.Django重定向你是如何实现的？用的什么状态码？</h3><p>使用HttpResponseRedirect</p>
+<p>redire和reverse</p>
+<p>状态码：302,301</p>
+<h3 id="8-ngnix的正向代理与反向代理？"><a href="#8-ngnix的正向代理与反向代理？" class="headerlink" title="8.ngnix的正向代理与反向代理？"></a>8.ngnix的正向代理与反向代理？</h3><p>正向代理 是一个位于客户端和原始服务器(origin server)之间的服务器，为了从原始服务器取得内容，客户端向代理发送一个请求并指定目标(原始服务器)，然后代理向原始服务器转交请求并将获得的内容返回给客户端。客户端必须要进行一些特别的设置才能使用正向代理。</p>
+<p>反向代理正好相反，对于客户端而言它就像是原始服务器，并且客户端不需要进行任何特别的设置。客户端向反向代理的命名空间中的内容发送普通请求，接着反向代理将判断向何处(原始服务器)转交请求，并将获得的内容返回给客户端，就像这些内容原本就是它自己的一样。</p>
+<h3 id="9-Tornado-的核心是什么？"><a href="#9-Tornado-的核心是什么？" class="headerlink" title="9.Tornado 的核心是什么？"></a>9.Tornado 的核心是什么？</h3><p>Tornado 的核心是 ioloop 和 iostream 这两个模块，前者提供了一个高效的 I/O 事件循环，后者则封装了 一个无阻塞的 socket 。通过向 ioloop 中添加网络 I/O 事件，利用无阻塞的 socket ，再搭配相应的回调 函数，便可达到梦寐以求的高效异步执行。</p>
+<h3 id="10-Django-本身提供了-runserver，为什么不能用来部署？"><a href="#10-Django-本身提供了-runserver，为什么不能用来部署？" class="headerlink" title="10.Django 本身提供了 runserver，为什么不能用来部署？"></a>10.Django 本身提供了 runserver，为什么不能用来部署？</h3><p>runserver 方法是调试 Django 时经常用到的运行方式，它使用 Django 自带的</p>
+<p>WSGI Server 运行，主要在测试和开发中使用，并且 runserver 开启的方式也是单进程 。</p>
+<p> uWSGI 是一个 Web 服务器，它实现了 WSGI 协议、uwsgi、http 等协议。注意 uwsgi 是一种通信协议，而 uWSGI 是实现 uwsgi 协议和 WSGI 协议的 Web 服务器。uWSGI 具有超快的性能、低内存占用和多 app 管理等优点，并且搭配着 Nginx</p>
+<p>就是一个生产环境了，能够将用户访问请求与应用 app 隔离开，实现真正的部署 。相比来讲，支持的并发量更高，方便管理多进程，发挥多核的优势，提升性能。</p>
+<h2 id="网络编程和前端部分"><a href="#网络编程和前端部分" class="headerlink" title="网络编程和前端部分"></a>网络编程和前端部分</h2><h3 id="1-AJAX是什么，如何使用AJAX？"><a href="#1-AJAX是什么，如何使用AJAX？" class="headerlink" title="1.AJAX是什么，如何使用AJAX？"></a>1.AJAX是什么，如何使用AJAX？</h3><p>ajax(异步的javascript 和xml) 能够刷新局部网页数据而不是重新加载整个网页。</p>
+<p>第一步，创建xmlhttprequest对象，var xmlhttp =new XMLHttpRequest（);XMLHttpRequest对象用来和服务器交换数据。</p>
+<p>第二步，使用xmlhttprequest对象的open（）和send（）方法发送资源请求给服务器。</p>
+<p>第三步，使用xmlhttprequest对象的responseText或responseXML属性获得服务器的响应。</p>
+<p>第四步，onreadystatechange函数，当发送请求到服务器，我们想要服务器响应执行一些功能就需要使用onreadystatechange函数，每次xmlhttprequest对象的readyState发生改变都会触发onreadystatechange函数。</p>
+<h3 id="2-常见的HTTP状态码有哪些？"><a href="#2-常见的HTTP状态码有哪些？" class="headerlink" title="2. 常见的HTTP状态码有哪些？"></a>2. 常见的HTTP状态码有哪些？</h3><p>200 OK</p>
+<p>301 Moved Permanently</p>
+<p>302 Found</p>
+<p>304 Not Modified</p>
+<p>307 Temporary Redirect</p>
+<p>400 Bad Request</p>
+<p>401 Unauthorized</p>
+<p>403 Forbidden</p>
+<p>404 Not Found</p>
+<p>410 Gone</p>
+<p>500 Internal Server Error</p>
+<p>501 Not Implemented</p>
+<h3 id="3-Post和get区别？"><a href="#3-Post和get区别？" class="headerlink" title="3. Post和get区别？"></a>3. Post和get区别？</h3><p>1、GET请求，请求的数据会附加在URL之后，以?分割URL和传输数据，多个参数用&amp;连接。URL的编码格式采用的是ASCII编码，而不是unicode，即是说所有的非ASCII字符都要编码之后再传输。</p>
+<p>POST请求：POST请求会把请求的数据放置在HTTP请求包的包体中。上面的item=bandsaw就是实际的传输数据。</p>
+<p>因此，GET请求的数据会暴露在地址栏中，而POST请求则不会。</p>
+<p>2、传输数据的大小</p>
+<p>在HTTP规范中，没有对URL的长度和传输的数据大小进行限制。但是在实际开发过程中，对于GET，特定的浏览器和服务器对URL的长度有限制。因此，在使用GET请求时，传输数据会受到URL长度的限制。</p>
+<p>对于POST，由于不是URL传值，理论上是不会受限制的，但是实际上各个服务器会规定对POST提交数据大小进行限制，Apache、IIS都有各自的配置。</p>
+<p>3、安全性</p>
+<p>POST的安全性比GET的高。这里的安全是指真正的安全，而不同于上面GET提到的安全方法中的安全，上面提到的安全仅仅是不修改服务器的数据。比如，在进行登录操作，通过GET请求，用户名和密码都会暴露再URL上，因为登录页面有可能被浏览器缓存以及其他人查看浏览器的历史记录的原因，此时的用户名和密码就很容易被他人拿到了。除此之外，GET请求提交的数据还可能会造成Cross-site request frogery攻击。</p>
+<h3 id="4-cookie-和session-的区别？"><a href="#4-cookie-和session-的区别？" class="headerlink" title="4.cookie 和session 的区别？"></a>4.cookie 和session 的区别？</h3><p>1、cookie数据存放在客户的浏览器上，session数据放在服务器上。</p>
+<p>2、cookie不是很安全，别人可以分析存放在本地的COOKIE并进行COOKIE欺骗考虑到安全应当使用session。</p>
+<p>3、session会在一定时间内保存在服务器上。当访问增多，会比较占用服务器的性能考虑到减轻服务器性能方面，应当使用COOKIE。</p>
+<p>4、单个cookie保存的数据不能超过4K，很多浏览器都限制一个站点最多保存20个cookie。</p>
+<p>5、建议：<br>   将登陆信息等重要信息存放为SESSION<br>   其他信息如果需要保留，可以放在COOKIE中</p>
+<h3 id="5-创建一个简单tcp服务器需要的流程"><a href="#5-创建一个简单tcp服务器需要的流程" class="headerlink" title="5.创建一个简单tcp服务器需要的流程"></a>5.创建一个简单tcp服务器需要的流程</h3><p>1.socket创建一个套接字</p>
+<p>2.bind绑定ip和port</p>
+<p>3.listen使套接字变为可以被动链接</p>
+<p>4.accept等待客户端的链接</p>
+<p>5.recv/send接收发送数据</p>
+<h2 id="爬虫和数据库部分"><a href="#爬虫和数据库部分" class="headerlink" title="爬虫和数据库部分"></a>爬虫和数据库部分</h2><h3 id="1-scrapy和scrapy-redis有什么区别？为什么选择redis数据库？"><a href="#1-scrapy和scrapy-redis有什么区别？为什么选择redis数据库？" class="headerlink" title="1.scrapy和scrapy-redis有什么区别？为什么选择redis数据库？"></a>1.scrapy和scrapy-redis有什么区别？为什么选择redis数据库？</h3><p>1) scrapy是一个Python爬虫框架，爬取效率极高，具有高度定制性，但是不支持分布式。而scrapy-redis一套基于redis数据库、运行在scrapy框架之上的组件，可以让scrapy支持分布式策略，Slaver端共享Master端redis数据库里的item队列、请求队列和请求指纹集合。</p>
+<p>2) 为什么选择redis数据库，因为redis支持主从同步，而且数据都是缓存在内存中的，所以基于redis的分布式爬虫，对请求和数据的高频读取效率非常高。</p>
+<h3 id="2-你用过的爬虫框架或者模块有哪些？谈谈他们的区别或者优缺点？"><a href="#2-你用过的爬虫框架或者模块有哪些？谈谈他们的区别或者优缺点？" class="headerlink" title="2. 你用过的爬虫框架或者模块有哪些？谈谈他们的区别或者优缺点？"></a>2. 你用过的爬虫框架或者模块有哪些？谈谈他们的区别或者优缺点？</h3><p>Python自带：urllib，urllib2</p>
+<p>第 三 方：requests</p>
+<p>框    架：Scrapy</p>
+<p>urllib和urllib2模块都做与请求URL相关的操作，但他们提供不同的功能。</p>
+<p>urllib2.：urllib2.urlopen可以接受一个Request对象或者url，（在接受Request对象时候，并以此可以来设置一个URL 的headers），urllib.urlopen只接收一个url</p>
+<p>urllib 有urlencode,urllib2没有，因此总是urllib，urllib2常会一起使用的原因</p>
+<p>scrapy是封装起来的框架，他包含了下载器，解析器，日志及异常处理，基于多线程， twisted的方式处理，对于固定单个网站的爬取开发，有优势，但是对于多网站爬取 100个网站，并发及分布式处理方面，不够灵活，不便调整与括展。</p>
+<p>request 是一个HTTP库， 它只是用来，进行请求，对于HTTP请求，他是一个强大的库，下载，解析全部自己处理，灵活性更高，高并发与分布式部署也非常灵活，对于功能可以更好实现.</p>
+<p>Scrapy优缺点：</p>
+<p>优点：scrapy 是异步的</p>
+<p>采取可读性更强的xpath代替正则</p>
+<p>强大的统计和log系统</p>
+<p>同时在不同的url上爬行</p>
+<p>支持shell方式，方便独立调试</p>
+<p>写middleware,方便写一些统一的过滤器</p>
+<p>通过管道的方式存入数据库</p>
+<p>缺点：基于python的爬虫框架，扩展性比较差</p>
+<p>基于twisted框架，运行中的exception是不会干掉reactor，并且异步框架出错后是不会停掉其他任务的，数据出错后难以察觉。</p>
+<h3 id="3-你常用的mysql引擎有哪些？各引擎间有什么区别？"><a href="#3-你常用的mysql引擎有哪些？各引擎间有什么区别？" class="headerlink" title="3.你常用的mysql引擎有哪些？各引擎间有什么区别？"></a>3.你常用的mysql引擎有哪些？各引擎间有什么区别？</h3><p>主要 MyISAM 与 InnoDB 两个引擎，其主要区别如下：</p>
+<p>一、InnoDB 支持事务，MyISAM 不支持，这一点是非常之重要。事务是一种高</p>
+<p>级的处理方式，如在一些列增删改中只要哪个出错还可以回滚还原，而 MyISAM</p>
+<p>就不可以了；</p>
+<p>二、MyISAM 适合查询以及插入为主的应用，InnoDB 适合频繁修改以及涉及到</p>
+<p>安全性较高的应用；</p>
+<p>三、InnoDB 支持外键，MyISAM 不支持；</p>
+<p>四、MyISAM 是默认引擎，InnoDB 需要指定；</p>
+<p>五、InnoDB 不支持 FULLTEXT 类型的索引；</p>
+<p>六、InnoDB 中不保存表的行数，如 select count(*) from table 时，InnoDB；需要</p>
+<p>扫描一遍整个表来计算有多少行，但是 MyISAM 只要简单的读出保存好的行数即</p>
+<p>可。注意的是，当 count(*)语句包含 where 条件时 MyISAM 也需要扫描整个表；</p>
+<p>七、对于自增长的字段，InnoDB 中必须包含只有该字段的索引，但是在 MyISAM</p>
+<p>表中可以和其他字段一起建立联合索引；</p>
+<p>八、清空整个表时，InnoDB 是一行一行的删除，效率非常慢。MyISAM 则会重</p>
+<p>建表；</p>
+<p>九、InnoDB 支持行锁（某些情况下还是锁整表，如 update table set a=1 where</p>
+<p>user like ‘%lee%’</p>
+<h3 id="4-描述下scrapy框架运行的机制？"><a href="#4-描述下scrapy框架运行的机制？" class="headerlink" title="4.描述下scrapy框架运行的机制？"></a>4.描述下scrapy框架运行的机制？</h3><p>从start_urls里获取第一批url并发送请求，请求由引擎交给调度器入请求队列，获取完毕后，调度器将请求队列里的请求交给下载器去获取请求对应的响应资源，并将响应交给自己编写的解析方法做提取处理：1. 如果提取出需要的数据，则交给管道文件处理；2. 如果提取出url，则继续执行之前的步骤（发送url请求，并由引擎将请求交给调度器入队列…)，直到请求队列里没有请求，程序结束。</p>
+<h3 id="5-什么是关联查询，有哪些？"><a href="#5-什么是关联查询，有哪些？" class="headerlink" title="5.什么是关联查询，有哪些？"></a>5.什么是关联查询，有哪些？</h3><p>将多个表联合起来进行查询，主要有内连接、左连接、右连接、全连接（外连接）</p>
+<h3 id="6-写爬虫是用多进程好？还是多线程好？-为什么？"><a href="#6-写爬虫是用多进程好？还是多线程好？-为什么？" class="headerlink" title="6.写爬虫是用多进程好？还是多线程好？ 为什么？"></a>6.写爬虫是用多进程好？还是多线程好？ 为什么？</h3><p>IO密集型代码(文件处理、网络爬虫等)，多线程能够有效提升效率(单线程下有IO操作会进行IO等待，造成不必要的时间浪费，而开启多线程能在线程A等待时，自动切换到线程B，可以不浪费CPU的资源，从而能提升程序执行效率)。在实际的数据采集过程中，既考虑网速和响应的问题，也需要考虑自身机器的硬件情况，来设置多进程或多线程</p>
+<h3 id="7-数据库的优化？"><a href="#7-数据库的优化？" class="headerlink" title="7.数据库的优化？"></a>7.数据库的优化？</h3><ol>
+<li><p>优化索引、SQL 语句、分析慢查询；</p>
+</li>
+<li><p>设计表的时候严格根据数据库的设计范式来设计数据库；</p>
+</li>
+<li><p>使用缓存，把经常访问到的数据而且不需要经常变化的数据放在缓存中，能</p>
+</li>
+</ol>
+<p>节约磁盘IO；</p>
+<ol start="4">
+<li><p>优化硬件；采用SSD，使用磁盘队列技术(RAID0,RAID1,RDID5)等；</p>
+</li>
+<li><p>采用MySQL 内部自带的表分区技术，把数据分层不同的文件，能够提高磁</p>
+</li>
+</ol>
+<p>盘的读取效率；</p>
+<ol start="6">
+<li><p>垂直分表；把一些不经常读的数据放在一张表里，节约磁盘I/O；</p>
+</li>
+<li><p>主从分离读写；采用主从复制把数据库的读操作和写入操作分离开来；</p>
+</li>
+<li><p>分库分表分机器（数据量特别大），主要的的原理就是数据路由；</p>
+</li>
+<li><p>选择合适的表引擎，参数上的优化；</p>
+</li>
+<li><p>进行架构级别的缓存，静态化和分布式；</p>
+</li>
+<li><p>不采用全文索引；</p>
+</li>
+<li><p>采用更快的存储方式，例如 NoSQL存储经常访问的数据</p>
+</li>
+</ol>
+<h3 id="8-常见的反爬虫和应对方法？"><a href="#8-常见的反爬虫和应对方法？" class="headerlink" title="8.常见的反爬虫和应对方法？"></a>8.常见的反爬虫和应对方法？</h3><p>1）.通过Headers反爬虫</p>
+<p>从用户请求的Headers反爬虫是最常见的反爬虫策略。很多网站都会对Headers的User-Agent进行检测，还有一部分网站会对Referer进行检测（一些资源网站的防盗链就是检测Referer）。如果遇到了这类反爬虫机制，可以直接在爬虫中添加Headers，将浏览器的User-Agent复制到爬虫的Headers中；或者将Referer值修改为目标网站域名。对于检测Headers的反爬虫，在爬虫中修改或者添加Headers就能很好的绕过。</p>
+<p>2）.基于用户行为反爬虫</p>
+<p>还有一部分网站是通过检测用户行为，例如同一IP短时间内多次访问同一页面，或者同一账户短时间内多次进行相同操作。</p>
+<p>大多数网站都是前一种情况，对于这种情况，使用IP代理就可以解决。可以专门写一个爬虫，爬取网上公开的代理ip，检测后全部保存起来。这样的代理ip爬虫经常会用到，最好自己准备一个。有了大量代理ip后可以每请求几次更换一个ip，这在requests或者urllib2中很容易做到，这样就能很容易的绕过第一种反爬虫。</p>
+<p>对于第二种情况，可以在每次请求后随机间隔几秒再进行下一次请求。有些有逻辑漏洞的网站，可以通过请求几次，退出登录，重新登录，继续请求来绕过同一账号短时间内不能多次进行相同请求的限制。</p>
+<p>3）.动态页面的反爬虫</p>
+<p>上述的几种情况大多都是出现在静态页面，还有一部分网站，我们需要爬取的数据是通过ajax请求得到，或者通过JavaScript生成的。首先用Fiddler对网络请求进行分析。如果能够找到ajax请求，也能分析出具体的参数和响应的具体含义，我们就能采用上面的方法，直接利用requests或者urllib2模拟ajax请求，对响应的json进行分析得到需要的数据。</p>
+<p>能够直接模拟ajax请求获取数据固然是极好的，但是有些网站把ajax请求的所有参数全部加密了。我们根本没办法构造自己所需要的数据的请求。这种情况下就用selenium+phantomJS，调用浏览器内核，并利用phantomJS执行js来模拟人为操作以及触发页面中的js脚本。从填写表单到点击按钮再到滚动页面，全部都可以模拟，不考虑具体的请求和响应过程，只是完完整整的把人浏览页面获取数据的过程模拟一遍。</p>
+<p>用这套框架几乎能绕过大多数的反爬虫，因为它不是在伪装成浏览器来获取数据（上述的通过添加 Headers一定程度上就是为了伪装成浏览器），它本身就是浏览器，phantomJS就是一个没有界面的浏览器，只是操控这个浏览器的不是人。利selenium+phantomJS能干很多事情，例如识别点触式（12306）或者滑动式的验证码，对页面表单进行暴力破解等。</p>
+<h3 id="9-分布式爬虫主要解决什么问题？"><a href="#9-分布式爬虫主要解决什么问题？" class="headerlink" title="9.分布式爬虫主要解决什么问题？"></a>9.分布式爬虫主要解决什么问题？</h3><p>1)ip</p>
+<p>2)带宽</p>
+<p>3）cpu</p>
+<p>4）io</p>
+<h3 id="10-爬虫过程中验证码怎么处理？"><a href="#10-爬虫过程中验证码怎么处理？" class="headerlink" title="10.爬虫过程中验证码怎么处理？"></a>10.爬虫过程中验证码怎么处理？</h3><p>1.scrapy自带</p>
+<p>2.付费接口</p>
+<h3 id="1-dict-的-items-方法与-iteritems-方法的不同？"><a href="#1-dict-的-items-方法与-iteritems-方法的不同？" class="headerlink" title="1.dict 的 items() 方法与 iteritems() 方法的不同？"></a>1.dict 的 items() 方法与 iteritems() 方法的不同？</h3><p>items方法将所有的字典以列表方式返回，其中项在返回时没有特殊的顺序；</p>
+<p>iteritems方法有相似的作用，但是返回一个迭代器对象</p>
+<h3 id="2-说明os-sys模块不同，并列举常用的模块方法？"><a href="#2-说明os-sys模块不同，并列举常用的模块方法？" class="headerlink" title="2.说明os,sys模块不同，并列举常用的模块方法？"></a>2.说明os,sys模块不同，并列举常用的模块方法？</h3><p>官方解释：</p>
+<p>os： This module provides a portable way of usingoperating system dependent functionality.</p>
+<p>翻译：提供一种方便的使用操作系统函数的方法。</p>
+<p>sys：This module provides access to some variablesused or maintained by the interpreter and to functions that interact stronglywith the interpreter.</p>
+<p>翻译：提供访问由解释器使用或维护的变量和在与解释器交互使用到的函数。</p>
+<p>os 常用方法</p>
+<p>os.remove()删除文件<br>os.rename()重命名文件<br>os.walk()生成目录树下的所有文件名<br>os.chdir()改变目录<br>os.mkdir/makedirs创建目录/多层目录<br>os.rmdir/removedirs删除目录/多层目录<br>os.listdir()列出指定目录的文件<br>os.getcwd()取得当前工作目录<br>os.chmod()改变目录权限<br>os.path.basename()去掉目录路径，返回文件名<br>os.path.dirname()去掉文件名，返回目录路径<br>os.path.join()将分离的各部分组合成一个路径名<br>os.path.split()返回（dirname(),basename())元组<br>os.path.splitext()(返回filename,extension)元组<br>os.path.getatime\ctime\mtime分别返回最近访问、创建、修改时间<br>os.path.getsize()返回文件大小<br>os.path.exists()是否存在<br>os.path.isabs()是否为绝对路径<br>os.path.isdir()是否为目录<br>os.path.isfile()是否为文件<br>os.remove()删除文件<br>os.rename()重命名文件<br>os.walk()生成目录树下的所有文件名<br>os.chdir()改变目录<br>os.mkdir/makedirs创建目录/多层目录<br>os.rmdir/removedirs删除目录/多层目录<br>os.listdir()列出指定目录的文件<br>os.getcwd()取得当前工作目录<br>os.chmod()改变目录权限<br>os.path.basename()去掉目录路径，返回文件名<br>os.path.dirname()去掉文件名，返回目录路径<br>os.path.join()将分离的各部分组合成一个路径名<br>os.path.split()返回（dirname(),basename())元组<br>os.path.splitext()(返回filename,extension)元组<br>os.path.getatime\ctime\mtime分别返回最近访问、创建、修改时间<br>os.path.getsize()返回文件大小<br>os.path.exists()是否存在<br>os.path.isabs()是否为绝对路径<br>os.path.isdir()是否为目录<br>os.path.isfile()是否为文件</p>
+<p>sys 常用方法</p>
+<p>sys.argv 命令行参数List，第一个元素是程序本身路径<br>sys.modules.keys() 返回所有已经导入的模块列表<br>sys.exc_info() 获取当前正在处理的异常类,exc_type、exc_value、exc_traceback当前处理的异常详细信息<br>sys.exit(n) 退出程序，正常退出时exit(0)<br>sys.hexversion 获取Python解释程序的版本值，16进制格式如：0x020403F0<br>sys.version 获取Python解释程序的版本信息<br>sys.maxint 最大的Int值<br>sys.maxunicode 最大的Unicode值<br>sys.modules 返回系统导入的模块字段，key是模块名，value是模块<br>sys.path 返回模块的搜索路径，初始化时使用PYTHONPATH环境变量的值<br>sys.platform 返回操作系统平台名称<br>sys.stdout 标准输出<br>sys.stdin 标准输入<br>sys.stderr 错误输出<br>sys.exc_clear() 用来清除当前线程所出现的当前的或最近的错误信息<br>sys.exec_prefix 返回平台独立的python文件安装的位置<br>sys.byteorder 本地字节规则的指示器，big-endian平台的值是’big’,little-endian平台的值是’little’<br>sys.copyright 记录python版权相关的东西<br>sys.api_version 解释器的C的API版本<br>sys.version_info<br>sys.argv 命令行参数List，第一个元素是程序本身路径<br>sys.modules.keys() 返回所有已经导入的模块列表<br>sys.exc_info() 获取当前正在处理的异常类,exc_type、exc_value、exc_traceback当前处理的异常详细信息<br>sys.exit(n) 退出程序，正常退出时exit(0)<br>sys.hexversion 获取Python解释程序的版本值，16进制格式如：0x020403F0<br>sys.version 获取Python解释程序的版本信息<br>sys.maxint 最大的Int值<br>sys.maxunicode 最大的Unicode值<br>sys.modules 返回系统导入的模块字段，key是模块名，value是模块<br>sys.path 返回模块的搜索路径，初始化时使用PYTHONPATH环境变量的值<br>sys.platform 返回操作系统平台名称<br>sys.stdout 标准输出<br>sys.stdin 标准输入<br>sys.stderr 错误输出<br>sys.exc_clear() 用来清除当前线程所出现的当前的或最近的错误信息<br>sys.exec_prefix 返回平台独立的python文件安装的位置<br>sys.byteorder 本地字节规则的指示器，big-endian平台的值是’big’,little-endian平台的值是’little’<br>sys.copyright 记录python版权相关的东西<br>sys.api_version 解释器的C的API版本<br>sys.version_info</p>
+<h3 id="3-Python里面如何拷贝一个对象？deepcopy-和-copy的区别？"><a href="#3-Python里面如何拷贝一个对象？deepcopy-和-copy的区别？" class="headerlink" title="3.Python里面如何拷贝一个对象？deepcopy 和 copy的区别？"></a>3.Python里面如何拷贝一个对象？deepcopy 和 copy的区别？</h3><p>copy 仅拷贝对象本身，而不拷贝对象中引用的其它对象。</p>
+<p>deepcopy 除拷贝对象本身，而且拷贝对象中引用的其它对象。</p>
+<h3 id="4-os-path和sys-path的区别？"><a href="#4-os-path和sys-path的区别？" class="headerlink" title="4.os.path和sys.path的区别？"></a>4.os.path和sys.path的区别？</h3><p>os.path是module，包含了各种处理长文件名(路径名)的函数。</p>
+<p>sys.path是由目录名构成的列表，Python 从中查找扩展模块( Python 源模块, 编译模块,或者二进制扩展). 启动 Python 时,这个列表从根据内建规则,PYTHONPATH 环境变量的内容, 以及注册表( Windows 系统)等进行初始化.</p>
+<h3 id="5-re模块中match和search方法的不同？"><a href="#5-re模块中match和search方法的不同？" class="headerlink" title="5.re模块中match和search方法的不同？"></a>5.re模块中match和search方法的不同？</h3><p>match() 函数只检查 RE 是否在字符串开始处匹配，而search() 则是扫描整个字符串。</p>
+<h3 id="6-解释生成器-generator-与函数的不同，并实现和使用简单generator？"><a href="#6-解释生成器-generator-与函数的不同，并实现和使用简单generator？" class="headerlink" title="6.解释生成器(generator)与函数的不同，并实现和使用简单generator？"></a>6.解释生成器(generator)与函数的不同，并实现和使用简单generator？</h3><p>生成器和函数的主要区别在于函数 return avalue，生成器 yield a value同时标记或记忆point of the yield 以便于在下次调用时从标记点恢复执行。 yield 使函数转换成生成器，而生成器反过来又返回迭代器。</p>
+<h2 id="Python-Web相关"><a href="#Python-Web相关" class="headerlink" title="Python Web相关"></a>Python Web相关</h2><h3 id="1-解释一下-WSGI-和-FastCGI-的关系？"><a href="#1-解释一下-WSGI-和-FastCGI-的关系？" class="headerlink" title="1.解释一下 WSGI 和 FastCGI 的关系？"></a>1.解释一下 WSGI 和 FastCGI 的关系？</h3><p>CGI全称是“公共网关接口”(CommonGateway Interface)，HTTP服务器与你的或其它机器上的程序进行“交谈”的一种工具，其程序须运行在网络服务器上。　CGI可以用任何一种语言编写，只要这种语言具有标准输入、输出和环境变量。如php,perl,tcl等。</p>
+<p>FastCGI像是一个常驻(long-live)型的CGI，它可以一直执行着，只要激活后，不会每次都要花费时间去fork一次(这是CGI最为人诟病的fork-and-execute模式)。它还支持分布式的运算, 即 FastCGI 程序可以在网站服务器以外的主机上执行并且接受来自其它网站服务器来的请求。</p>
+<p>FastCGI是语言无关的、可伸缩架构的CGI开放扩展，其主要行为是将CGI解释器进程保持在内存中并因此获得较高的性能。众所周知，CGI解释器的反复加载是CGI性能低下的主要原因，如果CGI解释器保持在内存中并接受FastCGI进程管理器调度，则可以提供良好的性能、伸缩性、Fail- Over特性等等。</p>
+<p>WSGI的全称为： PythonWeb Server Gateway Interface v1.0 （Python Web 服务器网关接口），</p>
+<p>它是 Python 应用程序和 WEB 服务器之间的一种接口。</p>
+<p>它的作用，类似于FCGI 或 FASTCGI 之类的协议的作用。</p>
+<p>WSGI 的目标，是要建立一个简单的普遍适用的服务器与 WEB 框架之间的接口。</p>
+<p>Flup就是使用 Python 语言对 WSGI 的一种实现，是可以用于 Python 的应用开发中的一种工具或者说是一种库。</p>
+<p>Spawn-fcgi是一个小程序，这个程序的作用是管理fast-cgi进程，那么管理wsgi进程也是没有问题的，功能和php-fpm类似。</p>
+<p>故，简单地说，WSGI和FastCGI都是一种CGI，用于连接WEB服务器与应用程序，而WSGI专指Python应用程序。而flup是WSGI的一种实现，Spawn-fcgi是用于管理flup进程的一个工具，可以启动多个wsgi进程，并管理它们。</p>
+<h3 id="2-解释一下-Django-和-Tornado-的关系、差别"><a href="#2-解释一下-Django-和-Tornado-的关系、差别" class="headerlink" title="2.解释一下 Django 和 Tornado 的关系、差别"></a>2.解释一下 Django 和 Tornado 的关系、差别</h3><p>Django源自一个在线新闻 Web站点，于 2005 年以开源的形式被释放出来。</p>
+<p>Django 框架的核心组件有：</p>
+<p>用于创建模型的对象关系映射为最终用户设计的完美管理界面一流的 URL 设计设计者友好的模板语言缓存系统等等</p>
+<p>它鼓励快速开发,并遵循MVC设计。Django遵守 BSD版权，最新发行版本是Django</p>
+<p>1.4，于2012年03月23日发布.Django的主要目的是简便、快速的开发数据库驱动的网站。它强调代码复用,多个组件可以很方便的以“插件”形式服务于整个框架，Django有许多功能强大的第三方插件，你甚至可以很方便的开发出自己的工具包。这使得Django具有很强的可扩展性。它还强调快速开发和DRY(Do Not RepeatYourself)原则。</p>
+<p>Tornado是 FriendFeed使用的可扩展的非阻塞式 web 服务器及其相关工具的开源版本。这个 Web 框架看起来有些像 web.py 或者 Google 的 webapp，不过为了能有效利用非阻塞式服务器环境，这个 Web 框架还包含了一些相关的有用工具和优化。</p>
+<p>Tornado 和现在的主流 Web 服务器框架（包括大多数Python 的框架）有着明显的区别：它是非阻塞式服务器，而且速度相当快。得利于其 非阻塞的方式和对epoll的运用，Tornado 每秒可以处理数以千计的连接，这意味着对于实时 Web服务来说，Tornado 是一个理想的 Web 框架。我们开发这个 Web 服务器的主要目的就是为了处理 FriendFeed 的实时功能 ——在 FriendFeed 的应用里每一个活动用户都会保持着一个服务器连接。（关于如何扩容 服务器，以处理数以千计的客户端的连接的问题。</p>
+<h3 id="3-解释下django-debug-toolbar的使用"><a href="#3-解释下django-debug-toolbar的使用" class="headerlink" title="3.解释下django-debug-toolbar的使用"></a>3.解释下django-debug-toolbar的使用</h3><p>使用django开发站点时，可以使用django-debug-toolbar来进行调试。在settings.py中添加’debug_toolbar.middleware.DebugToolbarMiddleware’到项目的MIDDLEWARE_CLASSES 内。</p>
+<h3 id="4-解释下Django使用redis缓存服务器"><a href="#4-解释下Django使用redis缓存服务器" class="headerlink" title="4.解释下Django使用redis缓存服务器"></a>4.解释下Django使用redis缓存服务器</h3><p>为了能在Django中使用redis，还需要安装redis for Django的插件。然后在Django的settings中配置了。现在连接和配置都已经完成了，接下来是一个简单的例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.conf <span class="keyword">import</span> settings</span><br><span class="line"><span class="keyword">from</span> django.core.cache <span class="keyword">import</span> cache</span><br><span class="line"></span><br><span class="line"><span class="comment">#read cache user id</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">readfrom_cache</span><span class="params">(self, user_name)</span>:</span></span><br><span class="line">	key = ‘user_id_of‘+user_name</span><br><span class="line">	value = cache.get(key)</span><br><span class="line">	<span class="keyword">if</span> value == <span class="literal">None</span>:</span><br><span class="line">		data = <span class="literal">None</span></span><br><span class="line">	<span class="keyword">else</span>:</span><br><span class="line">		data = json.loads(value)</span><br><span class="line">	<span class="keyword">return</span> data</span><br><span class="line"></span><br><span class="line"><span class="comment">#write cache user id</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">writeto_cache</span><span class="params">(self, user_name)</span>:</span></span><br><span class="line">	key = ‘user_id_of‘+user_name</span><br><span class="line">	cache.set(key, json.dumps(user_name), settings.NEVER_REDIS_TIMEOUT)</span><br></pre></td></tr></table></figure>
 
-<p>5.编程用sort进行排序，然后从最后一个元素开始判断</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">a&#x3D;[1,2,4,2,4,5,7,10,5,5,7,8,9,0,3]</span><br><span class="line">a.sort()</span><br><span class="line">last&#x3D;a[-1]</span><br><span class="line">for i inrange(len(a)-2,-1,-1):</span><br><span class="line">if last&#x3D;&#x3D;a[i]:</span><br><span class="line">del a[i]</span><br><span class="line">else:last&#x3D;a[i]</span><br><span class="line">print(a)</span><br></pre></td></tr></table></figure>
+<h3 id="5-如何进行Django单元测试"><a href="#5-如何进行Django单元测试" class="headerlink" title="5.如何进行Django单元测试"></a>5.如何进行Django单元测试</h3><p>Django的单元测试使用python的unittest模块，这个模块使用基于类的方法来定义测试。类名为django.test.TestCase,继承于python的unittest.TestCase。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.test <span class="keyword">import</span> TestCase</span><br><span class="line"><span class="keyword">from</span> myapp.models <span class="keyword">import</span> Animal</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AnimalTestCase</span><span class="params">(TestCase)</span>:</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">setUp</span><span class="params">(self)</span>:</span></span><br><span class="line">	Animal.objects.create(name=”lion”, sound=”roar”)</span><br><span class="line">	Animal.objects.create(name=”cat”, sound=”meow”)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test_animals_can_speak</span><span class="params">(self)</span>:</span></span><br><span class="line">    <span class="string">"""Animals that can speak are correctly identified"""</span></span><br><span class="line">    lion = Animal.objects.get(name=<span class="string">"lion"</span>)</span><br><span class="line">    cat = Animal.objects.get(name=<span class="string">"cat"</span>)</span><br><span class="line">    self.assertEqual(lion.speak(), <span class="string">'The lion says "roar"'</span>)</span><br><span class="line">    self.assertEqual(cat.speak(), <span class="string">'The cat says "meow"'</span>)</span><br></pre></td></tr></table></figure>
 
-<p>6.Python里面如何拷贝一个对象？（赋值，浅拷贝，深拷贝的区别）</p>
-<p>答：赋值（=），就是创建了对象的一个新的引用，修改其中任意一个变量都会影响到另一个。</p>
-<p>浅拷贝：创建一个新的对象，但它包含的是对原始对象中包含项的引用（如果用引用的方式修改其中一个对象，另外一个也会修改改变）{1,完全切片方法；2，工厂函数，如list()；3，copy模块的copy()函数}</p>
-<p>深拷贝：创建一个新的对象，并且递归的复制它所包含的对象（修改其中一个，另外一个不会改变）{copy模块的deep.deepcopy()函数}</p>
-<p>7.介绍一下except的用法和作用？</p>
-<p>答：try…except…except…[else…][finally…]</p>
-<p>执行try下的语句，如果引发异常，则执行过程会跳到except语句。对每个except分支顺序尝试执行，如果引发的异常与except中的异常组匹配，执行相应的语句。如果所有的except都不匹配，则异常会传递到下一个调用本代码的最高层try代码中。</p>
-<p>try下的语句正常执行，则执行else块代码。如果发生异常，就不会执行</p>
-<p>如果存在finally语句，最后总是会执行。</p>
-<p>8.Python中pass语句的作用是什么？</p>
-<p>答：pass语句不会执行任何操作，一般作为占位符或者创建占位程序，whileFalse:pass</p>
-<p>9.介绍一下Python下range()函数的用法？</p>
-<p>答：列出一组数据，经常用在for in range()循环中</p>
-<p>10.如何用Python来进行查询和替换一个文本字符串？</p>
-<p>答：可以使用re模块中的sub()函数或者subn()函数来进行查询和替换，</p>
-<p>格式：sub(replacement, string[,count=0])（replacement是被替换成的文本，string是需要被替换的文本，count是一个可选参数，指最大被替换的数量）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; import re</span><br><span class="line">&gt;&gt;&gt;p&#x3D;re.compile(‘blue|white|red’)</span><br><span class="line">&gt;&gt;&gt;print(p.sub(‘colour’,&#39;blue socks and red shoes’))</span><br><span class="line">colour socks and colourshoes</span><br><span class="line">&gt;&gt;&gt;print(p.sub(‘colour’,&#39;blue socks and red shoes’,count&#x3D;1))</span><br><span class="line">colour socks and redshoes</span><br><span class="line">subn()方法执行的效果跟sub()一样，不过它会返回一个二维数组，包括替换后的新的字符串和总共替换的数量</span><br></pre></td></tr></table></figure>
+<p>执行目录下所有的测试(所有的test*.py文件)：运行测试的时候，测试程序会在所有以test开头的文件中查找所有的test cases(inittest.TestCase的子类),自动建立测试集然后运行测试。</p>
+<p>$ python manage.py test</p>
+<p>执行animals项目下tests包里的测试：</p>
+<p>$ python manage.py testanimals.tests</p>
+<p>执行animals项目里的test测试：</p>
+<p>$ python manage.py testanimals</p>
+<p>单独执行某个test case：</p>
+<p>$ python manage.py testanimals.tests.AnimalTestCase</p>
+<p>单独执行某个测试方法：</p>
+<p>$ python manage.py testanimals.tests.AnimalTestCase.test_animals_can_speak</p>
+<p>为测试文件提供路径：</p>
+<p>$ python manage.py testanimals/</p>
+<p>通配测试文件名：</p>
+<p>$ python manage.py test—pattern=”tests*.py”</p>
+<p>启用warnings提醒：</p>
+<p>$ python -Wall manage.py test</p>
+<h3 id="6-解释下Http协议"><a href="#6-解释下Http协议" class="headerlink" title="6.解释下Http协议"></a>6.解释下Http协议</h3><p>HTTP是一个属于应用层的面向对象的协议，由于其简捷、快速的方式，适用于分布式超媒体信息系统。</p>
+<p>HTTP协议的主要特点可概括如下：</p>
+<p>1.支持客户/服务器模式。</p>
+<p>2.简单快速：客户向服务器请求服务时，只需传送请求方法和路径。请求方法常用的有GET、HEAD、POST。每种方法规定了客户与服务器联系的类型不同。由于HTTP协议简单，使得HTTP服务器的程序规模小，因而通信速度很快。</p>
+<p>3.灵活：HTTP允许传输任意类型的数据对象。正在传输的类型由Content-Type加以标记。</p>
+<p>4.无连接：无连接的含义是限制每次连接只处理一个请求。服务器处理完客户的请求，并收到客户的应答后，即断开连接。采用这种方式可以节省传输时间。</p>
+<p>5.无状态：HTTP协议是无状态协议。无状态是指协议对于事务处理没有记忆能力。缺少状态意味着如果后续处理需要前面的信息，则它必须重传，这样可能导致每次连接传送的数据量增大。另一方面，在服务器不需要先前信息时它的应答就较快。</p>
+<p>解释下Http请求头和常见响应状态码<br>Accept:指浏览器或其他客户可以接爱的MIME文件格式。可以根据它判断并返回适当的文件格式。</p>
+<p>Accept-Charset：指出浏览器可以接受的字符编码。英文浏览器的默认值是ISO-8859-1.</p>
+<p>Accept-Language：指出浏览器可以接受的语言种类，如en或en-us，指英语。</p>
+<p>Accept-Encoding：指出浏览器可以接受的编码方式。编码方式不同于文件格式，它是为了压缩文件并加速文件传递速度。浏览器在接收到Web响应之后先解码，然后再检查文件格式。</p>
+<p>Cache-Control：设置关于请求被代理服务器存储的相关选项。一般用不到。</p>
+<p>Connection：用来告诉服务器是否可以维持固定的HTTP连接。HTTP/1.1使用Keep-Alive为默认值，这样，当浏览器需要多个文件时(比如一个HTML文件和相关的图形文件)，不需要每次都建立连接。</p>
+<p>Content-Type：用来表名request的内容类型。可以用HttpServletRequest的getContentType()方法取得。</p>
+<p>Cookie：浏览器用这个属性向服务器发送Cookie。Cookie是在浏览器中寄存的小型数据体，它可以记载和服务器相关的用户信息，也可以用来实现会话功能。</p>
+<p>状态代码有三位数字组成，第一个数字定义了响应的类别，且有五种可能取值：</p>
+<p>1xx：指示信息–表示请求已接收，继续处理</p>
+<p>2xx：成功–表示请求已被成功接收、理解、接受</p>
+<p>3xx：重定向–要完成请求必须进行更进一步的操作</p>
+<p>4xx：客户端错误–请求有语法错误或请求无法实现</p>
+<p>5xx：服务器端错误–服务器未能实现合法的请求</p>
+<h3 id="7-常见状态代码、状态描述、说明："><a href="#7-常见状态代码、状态描述、说明：" class="headerlink" title="7.常见状态代码、状态描述、说明："></a>7.常见状态代码、状态描述、说明：</h3><p>200 OK //客户端请求成功</p>
+<p>400 Bad Request //客户端请求有语法错误，不能被服务器所理解</p>
+<p>401 Unauthorized //请求未经授权，这个状态代码必须和WWW-Authenticate报头域一起使用</p>
+<p>403 Forbidden //服务器收到请求，但是拒绝提供服务</p>
+<p>404 Not Found //请求资源不存在，eg：输入了错误的URL</p>
+<p>500 Internal Server Error //服务器发生不可预期的错误</p>
+<p>503 Server Unavailable //服务器当前不能处理客户端的请求，一段时间后可能恢复正常</p>
+<p>eg：HTTP/1.1 200 OK （CRLF）</p>
+<h3 id="1-可变与不可变类型；"><a href="#1-可变与不可变类型；" class="headerlink" title="1.可变与不可变类型；"></a>1.可变与不可变类型；</h3><p>不可变类型（数字、字符串、元组、不可变集合）不可变类型不能被修改。<br>可变类型（列表、字典、可变集合）</p>
+<h3 id="2-浅拷贝与深拷贝的实现方式、区别；deepcopy如果你来设计，如何实现；"><a href="#2-浅拷贝与深拷贝的实现方式、区别；deepcopy如果你来设计，如何实现；" class="headerlink" title="2.浅拷贝与深拷贝的实现方式、区别；deepcopy如果你来设计，如何实现；"></a>2.浅拷贝与深拷贝的实现方式、区别；deepcopy如果你来设计，如何实现；</h3><p>基本类型 :<br>基本类型在内存中分别占有固定大小的空间，他们的值保存在栈空间，我们是通过按值来访问的。<br>引用类型 :<br>引用类型，值大小不固定，栈内存中存放地址指向堆内存中的对象。是按引用访问的。<br>栈内存中存放的只是该对象的访问地址，在堆内存中为这个值分配空间。由于这种值的大小不固定，<br>因此不能把它们保存到栈内存中。但内存地址大小的固定的，因此可以将内存地址保存在栈内存中。<br>这样，当查询引用类型的变量时， 先从栈中读取内存地址， 然后再通过地址找到堆中的值。对于这种，<br>我们把它叫做按引用访问。<br>浅拷贝只复制指向某个对象的引用地址，而不复制对象本身，新旧对象还是共享同一块内存。<br>但深拷贝会另外创造一个一模一样的对象，新对象跟原对象不共享内存，修改新对象不会改到原对象。<br>浅复制只复制一层对象的属性，而深复制则递归复制了所有层级。<br>import copy as cp<br>L=[1,[2,3]]<br>L1=cp.copy(L) #浅拷贝: 只是引用，并不会开辟新的内存空间，<br>                                             L1与L指向同一片内存空间。L改变,L1也会锁着改变。<br>L2=cp.deepcopy(L) #深拷贝：会为数据重新开辟一片内存空间，L的变化不会影响L2。</p>
+<h3 id="3-new-与-init-的区别；"><a href="#3-new-与-init-的区别；" class="headerlink" title="3.new() 与 init()的区别；"></a>3.new() 与 init()的区别；</h3><p>new作用于init之前。前者可以决定是否调用后者，或者说可以决定调用哪个类的init方法。<br>首先要知道在面向对象编程中，实例化基本遵循创建实例对象、初始化实例对象、最后返回实例对象这么一个过程。<br>Python 中的 new 方法负责创建一个实例对象，init 方法负责将该实例对象进行初始化；</p>
+<h3 id="4-你知道几种设计模式；"><a href="#4-你知道几种设计模式；" class="headerlink" title="4.你知道几种设计模式；"></a>4.你知道几种设计模式；</h3><p>单例模式：保证一个类仅有一个实例，并提供一个访问他的全局访问点，例如框架中的数据库连接<br>装饰器模式：不修改元类代码和继承的情况下动态扩展类的功能，例如框架中的每个controller文件会提供before和after方法。<br>迭代器模式： 提供一个方法顺序访问一个聚合对象中各个元素，在PHP中将继承 Iterator 类<br>命令模式: 将”请求”封闭成对象, 以便使用不同的请求,队列或者日志来参数化其他对象. 命令模式也支持可撤销的操作.</p>
+<h3 id="5-编码和解码你了解过么；"><a href="#5-编码和解码你了解过么；" class="headerlink" title="5.编码和解码你了解过么；"></a>5.编码和解码你了解过么；</h3><p>数据通过编码decode转换成Unicode编码，编码的同时会将数据变成byte类型，通过解码encode转换为utf-8。</p>
+<h3 id="6-列表推导list-comprehension和生成器的优劣；"><a href="#6-列表推导list-comprehension和生成器的优劣；" class="headerlink" title="6.列表推导list comprehension和生成器的优劣；"></a>6.列表推导list comprehension和生成器的优劣；</h3><p>[expr for iter_var in iterable] 列表推导式是将所有的值一次性加载到内存中<br>(expr for iter_var in iterable)<br>在大数据量处理时，生成器表达式的优势就体现出来了，因为它的内存使用方式更好，<br>效率更高，它并不创建一个列表，只是返回一个生成器。</p>
+<h3 id="7-什么是装饰器；如果想在函数之后进行装饰，应该怎么做；"><a href="#7-什么是装饰器；如果想在函数之后进行装饰，应该怎么做；" class="headerlink" title="7.什么是装饰器；如果想在函数之后进行装饰，应该怎么做；"></a>7.什么是装饰器；如果想在函数之后进行装饰，应该怎么做；</h3><p>装饰器是一个函数，这个函数的主要作用是包装另一个函数或类<br>包装的目的是在不改变原函数名的情况下改变被包装对象的行为。<br>接收一个函数，内部对其包装，然后返回一个新函数，这样子动态的增强函数功能<br>通过高阶函数传递函数参数，新函数添加旧函数的需求，然后执行旧函数。</p>
+<h3 id="8-手写个使用装饰器实现的单例模式；"><a href="#8-手写个使用装饰器实现的单例模式；" class="headerlink" title="8.手写个使用装饰器实现的单例模式；"></a>8.手写个使用装饰器实现的单例模式；</h3><p>该模式的主要目的是确保某一个类只有一个实例存在。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> functools <span class="keyword">import</span> warps</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">My_decorate</span><span class="params">(f)</span>:</span></span><br><span class="line"><span class="meta">    @warps(f)</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">fn</span><span class="params">(*args,**kwargs)</span>:</span></span><br><span class="line">        print(<span class="string">'decorate called'</span>)</span><br><span class="line">        <span class="keyword">return</span> f(*args,**kwargs)</span><br><span class="line">    <span class="keyword">return</span> fn</span><br><span class="line"><span class="meta">@My_decorate</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fx</span><span class="params">()</span>:</span></span><br><span class="line">    pring(<span class="string">'fx called'</span>)</span><br><span class="line">fx()</span><br></pre></td></tr></table></figure>
+<h3 id="9-使用装饰器的单例和使用其他方法的单例，在后续使用中，有何区别；"><a href="#9-使用装饰器的单例和使用其他方法的单例，在后续使用中，有何区别；" class="headerlink" title="9.使用装饰器的单例和使用其他方法的单例，在后续使用中，有何区别；"></a>9.使用装饰器的单例和使用其他方法的单例，在后续使用中，有何区别；</h3><p>使用装饰器单例属性不会被覆盖。因为装饰器单例模式是直接返回之前生成的对象,<br>并不会重新初始化对象。像new方法构建的单例模式会重新调用init方法,为实例重新初始化属性。</p>
+<h3 id="10-手写：正则邮箱地址；"><a href="#10-手写：正则邮箱地址；" class="headerlink" title="10.手写：正则邮箱地址；"></a>10.手写：正则邮箱地址；</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">pattern = ‘[a-zA-Z0<span class="number">-9</span>_.-]+@[a-zA-Z0<span class="number">-9</span>]+.[a-z]’</span><br><span class="line">匹配身份证：</span><br><span class="line">pattern = ‘(^\d&#123;<span class="number">15</span>&#125;$)|(^\d&#123;<span class="number">18</span>&#125;$)|(^\d&#123;<span class="number">17</span>&#125;(\d|X|x)$)’</span><br><span class="line">pattern = ‘^[<span class="number">1</span><span class="number">-9</span>]\d&#123;<span class="number">5</span>&#125;(<span class="number">18</span>|<span class="number">19</span>|([<span class="number">23</span>]\d))\d&#123;<span class="number">2</span>&#125;((<span class="number">0</span>[<span class="number">1</span><span class="number">-9</span>])|(<span class="number">10</span>|<span class="number">11</span>|<span class="number">12</span>))(([<span class="number">0</span><span class="number">-2</span>][<span class="number">1</span><span class="number">-9</span>])|<span class="number">10</span>|<span class="number">20</span>|<span class="number">30</span>|<span class="number">31</span>)\d&#123;<span class="number">3</span>&#125;[<span class="number">0</span><span class="number">-9</span>Xx]$’</span><br></pre></td></tr></table></figure>
 
-<p>11.Python里面match()和search()的区别？</p>
-<p>答：re模块中match(pattern,string[,flags]),检查string的开头是否与pattern匹配。</p>
-<p>re模块中research(pattern,string[,flags]),在string搜索pattern的第一个匹配值。</p>
-<blockquote>
-<blockquote>
-<blockquote>
-<p>print(re.match(‘super’, ‘superstition’).span())<br>(0, 5)<br>print(re.match(‘super’, ‘insuperable’))<br>None<br>print(re.search(‘super’, ‘superstition’).span())<br>(0, 5)<br>print(re.search(‘super’, ‘insuperable’).span())<br>(2, 7)<br>12.用Python匹配HTML tag的时候，&lt;.<em>&gt;和&lt;.</em>?&gt;有什么区别？</p>
-</blockquote>
-</blockquote>
-</blockquote>
-<p>答：术语叫贪婪匹配( &lt;.<em>&gt; )和非贪婪匹配(&lt;.</em>?&gt; )</p>
-<p>例如:</p>
-<p>test<br>&lt;.<em>&gt; :<br>test<br>&lt;.</em>?&gt; :<br>13.Python里面如何生成随机数？</p>
-<p>答：random模块</p>
-<p>随机整数：random.randint(a,b)：返回随机整数x,a&lt;=x&lt;=b</p>
-<p>random.randrange(start,stop,[,step])：返回一个范围在(start,stop,step)之间的随机整数，不包括结束值。</p>
-<p>随机实数：random.random( ):返回0到1之间的浮点数</p>
-<p>random.uniform(a,b):返回指定范围内的浮点数。</p>
-<p>14.有没有一个工具可以帮助查找python的bug和进行静态的代码分析？</p>
-<p>答：PyChecker是一个python代码的静态分析工具，它可以帮助查找python代码的bug, 会对代码的复杂度和格式提出警告</p>
-<p>Pylint是另外一个工具可以进行codingstandard检查</p>
-<p>15.如何在一个function里面设置一个全局的变量？</p>
-<p>答：解决方法是在function的开始插入一个global声明：</p>
-<p>def f()<br>global x<br>16.单引号，双引号，三引号的区别</p>
-<p>答：单引号和双引号是等效的，如果要换行，需要符号(),三引号则可以直接换行，并且可以包含注释</p>
-<p>如果要表示Let’s go 这个字符串</p>
-<p>单引号：s4 = ‘Let\’s go’</p>
-<p>双引号：s5 = “Let’s go”</p>
-<p>s6 = ‘I realy like“python”!’</p>
-<p>这就是单引号和双引号都可以表示字符串的原因了</p>
+<h3 id="11-介绍下垃圾回收：引用计数-分代回收-孤立引用环；"><a href="#11-介绍下垃圾回收：引用计数-分代回收-孤立引用环；" class="headerlink" title="11.介绍下垃圾回收：引用计数/分代回收/孤立引用环；"></a>11.介绍下垃圾回收：引用计数/分代回收/孤立引用环；</h3><p>垃圾回收：python解释器对正在使用的对象保持计数，当某个对像的引用计数降为0时，垃圾收集器就可以释放<br>该对象，获取分配的内存。当分配对象和取消分配对象的差值高于阈值时垃圾回收才会启动。<br>分代回收：python将所有的对象分为0,1,2三代。所有的新建对象都是0代对象。当某一代对象经历过垃圾回收，<br>依然存活，那么它就被归入下一代对象。垃圾回收启动时，一定会扫描所有的0代对象。<br>如果0代经过一定次数垃圾回收，那么就启动对0代和1代的扫描清理。<br>当1代也经历了一定次数的垃圾回收后，那么会启动对0，1，2，即对所有对象进行扫描。<br>孤立引用环：</p>
+<h3 id="12-多进程与多线程的区别；CPU密集型适合用什么；"><a href="#12-多进程与多线程的区别；CPU密集型适合用什么；" class="headerlink" title="12.多进程与多线程的区别；CPU密集型适合用什么；"></a>12.多进程与多线程的区别；CPU密集型适合用什么；</h3><p>多线程：在单个程序中同时运行多个线程完成不同的工作，称为多线程。<br>线程共享内存空间；进程的内存是独立的，<br>同一个进程的线程之间可以直接交流；两个进程想通信，必须通过一个中间代理来实现，<br>一个线程可以控制和操作同一进程里的其他线程；但是进程只能操作子进程<br>优缺点：1.多进程的优点是稳定性好，一个子进程崩溃了，不会影响主进程以及其余进程。<br>但是缺点是创建进程的代价非常大，因为操作系统要给每个进程分配固定的资源。<br>2.多线程优点是效率较高一些，但是致命的缺点是任何一个线程崩溃都可能<br>造成整个进程的崩溃，因为它们共享了进程的内存资源池。<br>CPU密集型适合用多线程开发</p>
+<h3 id="13-进程通信的方式有几种；"><a href="#13-进程通信的方式有几种；" class="headerlink" title="13.进程通信的方式有几种；"></a>13.进程通信的方式有几种；</h3><p>进程间通信主要包括管道, 系统IPC(包括消息队列,信号量,共享存储), SOCKET</p>
+<h3 id="14-介绍下协程，为何比线程还快；"><a href="#14-介绍下协程，为何比线程还快；" class="headerlink" title="14.介绍下协程，为何比线程还快；"></a>14.介绍下协程，为何比线程还快；</h3><p>高并发+高扩展性+低成本：一个CPU支持上万的协程都不是问题。所以很适合用于高并发处理<br>协程能保留上一次调用时的状态，管是进程还是线程，每次阻塞、切换都需要陷入系统调用，<br>使用线程时需要非常小心地处理同步问题，而协程完全不存在这个问题。</p>
+<h3 id="15-range和xrange的区别"><a href="#15-range和xrange的区别" class="headerlink" title="15.range和xrange的区别"></a>15.range和xrange的区别</h3><p>xrange和range 的用法完全相同，但是返回的是一个生成器。</p>
+<h2 id="算法排序部分"><a href="#算法排序部分" class="headerlink" title="算法排序部分"></a>算法排序部分</h2><h3 id="16-手写快排；堆排；几种常用排序的算法复杂度是多少；快排平均复杂度多少，最坏情况如何优化；"><a href="#16-手写快排；堆排；几种常用排序的算法复杂度是多少；快排平均复杂度多少，最坏情况如何优化；" class="headerlink" title="16.手写快排；堆排；几种常用排序的算法复杂度是多少；快排平均复杂度多少，最坏情况如何优化；"></a>16.手写快排；堆排；几种常用排序的算法复杂度是多少；快排平均复杂度多少，最坏情况如何优化；</h3><h3 id="17-手写：已知一个长度n的无序列表，元素均是数字，要求把所有间隔为d的组合找出来，你写的解法算法复杂度多少；"><a href="#17-手写：已知一个长度n的无序列表，元素均是数字，要求把所有间隔为d的组合找出来，你写的解法算法复杂度多少；" class="headerlink" title="17.手写：已知一个长度n的无序列表，元素均是数字，要求把所有间隔为d的组合找出来，你写的解法算法复杂度多少；"></a>17.手写：已知一个长度n的无序列表，元素均是数字，要求把所有间隔为d的组合找出来，你写的解法算法复杂度多少；</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">func</span><span class="params">(x, d)</span>:</span></span><br><span class="line">	L = []</span><br><span class="line">	n = len(x)</span><br><span class="line">	<span class="keyword">if</span> d &gt; n:</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">L.append(x[<span class="number">0</span>])</span><br><span class="line">a = d + <span class="number">1</span></span><br><span class="line"><span class="keyword">while</span> a &lt; n:</span><br><span class="line">	L.append(x[a])</span><br><span class="line">	a = a + d + <span class="number">1</span></span><br><span class="line"><span class="keyword">return</span> L</span><br><span class="line"></span><br><span class="line">list = [x <span class="keyword">for</span> x <span class="keyword">in</span> range(<span class="number">100</span>)]</span><br><span class="line">result = func(list, <span class="number">10</span>)</span><br><span class="line">print(result)</span><br></pre></td></tr></table></figure>
+<p>我写的只考虑到从第一个元素开始组合。没有考虑从第二个，第三个元素开始……求大神提供完全正确方法。</p>
+<h3 id="18-手写：一个列表A-A1，A2，…-An-，要求把列表中所有的组合情况打印出来；"><a href="#18-手写：一个列表A-A1，A2，…-An-，要求把列表中所有的组合情况打印出来；" class="headerlink" title="18.手写：一个列表A=[A1，A2，…,An]，要求把列表中所有的组合情况打印出来；"></a>18.手写：一个列表A=[A1，A2，…,An]，要求把列表中所有的组合情况打印出来；</h3><h3 id="19-手写：用一行python写出1-2-3-…-108-；"><a href="#19-手写：用一行python写出1-2-3-…-108-；" class="headerlink" title="19.手写：用一行python写出1+2+3+…+108 ；"></a>19.手写：用一行python写出1+2+3+…+108 ；</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">s = sum([x <span class="keyword">for</span> x <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">108</span>+<span class="number">1</span>)])</span><br></pre></td></tr></table></figure>
+
+<h3 id="20-手写python：用递归的方式判断字符串是否为回文；"><a href="#20-手写python：用递归的方式判断字符串是否为回文；" class="headerlink" title="20.手写python：用递归的方式判断字符串是否为回文；"></a>20.手写python：用递归的方式判断字符串是否为回文；</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">isHuiWen</span><span class="params">(str)</span>:</span></span><br><span class="line">	<span class="keyword">if</span>(len(str) &lt;<span class="number">2</span>):</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">	<span class="keyword">if</span> str[<span class="number">0</span>] !=str[<span class="number">-1</span>]:</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">	<span class="keyword">return</span> isHuiWen(str[<span class="number">1</span>:<span class="number">-1</span>])</span><br><span class="line"></span><br><span class="line">str = input(<span class="string">"请输入一个字符串："</span>)</span><br><span class="line"><span class="keyword">if</span> isHuiWen(str):</span><br><span class="line">    print(<span class="string">"该字符串为回文字符串"</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    print(<span class="string">"该字符串不是回文"</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="21-单向链表长度未知，如何判断其中是否有环；"><a href="#21-单向链表长度未知，如何判断其中是否有环；" class="headerlink" title="21.单向链表长度未知，如何判断其中是否有环；"></a>21.单向链表长度未知，如何判断其中是否有环；</h3><h3 id="22-单向链表如何使用快速排序算法进行排序；"><a href="#22-单向链表如何使用快速排序算法进行排序；" class="headerlink" title="22.单向链表如何使用快速排序算法进行排序；"></a>22.单向链表如何使用快速排序算法进行排序；</h3><h3 id="23-手写：一个长度n的无序数字元素列表，如何求中位数，如何尽快的估算中位数，"><a href="#23-手写：一个长度n的无序数字元素列表，如何求中位数，如何尽快的估算中位数，" class="headerlink" title="23.手写：一个长度n的无序数字元素列表，如何求中位数，如何尽快的估算中位数，"></a>23.手写：一个长度n的无序数字元素列表，如何求中位数，如何尽快的估算中位数，</h3><p>你的算法复杂度是多少；</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">func</span><span class="params">(list)</span>:</span></span><br><span class="line">	<span class="keyword">if</span> len(list) &lt;= <span class="number">1</span>:</span><br><span class="line">		<span class="keyword">return</span> list</span><br><span class="line">	L = sorted(list)</span><br><span class="line">	n = len(list) % <span class="number">2</span></span><br><span class="line">	m = len(list) // <span class="number">2</span></span><br><span class="line">	<span class="keyword">if</span> n == <span class="number">0</span>:</span><br><span class="line">		s = (L[m] + L[m<span class="number">-1</span>]) / <span class="number">2</span></span><br><span class="line">		<span class="keyword">return</span> s</span><br><span class="line">	s = L[m]</span><br><span class="line">	<span class="keyword">return</span> s</span><br><span class="line"></span><br><span class="line">l = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">6</span>,<span class="number">84</span>,<span class="number">12</span>,<span class="number">62</span>,<span class="number">100</span>]</span><br><span class="line">print(func(l))</span><br></pre></td></tr></table></figure>
+
+<h3 id="24-如何遍历一个内部未知的文件夹（两种树的优先遍历方式）"><a href="#24-如何遍历一个内部未知的文件夹（两种树的优先遍历方式）" class="headerlink" title="24.如何遍历一个内部未知的文件夹（两种树的优先遍历方式）"></a>24.如何遍历一个内部未知的文件夹（两种树的优先遍历方式）</h3><h2 id="网络基础部分"><a href="#网络基础部分" class="headerlink" title="网络基础部分"></a>网络基础部分</h2><h3 id="25-TCP-IP分别在模型的哪一层；"><a href="#25-TCP-IP分别在模型的哪一层；" class="headerlink" title="25.TCP/IP分别在模型的哪一层；"></a>25.TCP/IP分别在模型的哪一层；</h3><p>TCP 在传输层，<br>IP在网络层</p>
+<h3 id="26-socket长连接是什么意思；"><a href="#26-socket长连接是什么意思；" class="headerlink" title="26.socket长连接是什么意思；"></a>26.socket长连接是什么意思；</h3><p>在一个TCP连接上可以连续发送多个数据包，在TCP连接保持期间，如果没有数据包发送，<br>需要双方发检测包以维持此链接，一般需要自己做在线维持。<br>长连接指建立SOCKET连接后不管是否使用都保持连接，但安全性较差<br>数据库的连接用长连接。如果用短连接频繁的通信会造成socket错误，<br>而且频繁的socket创建也是对资源的浪费</p>
+<h3 id="27-select和epoll你了解么，区别在哪；"><a href="#27-select和epoll你了解么，区别在哪；" class="headerlink" title="27.select和epoll你了解么，区别在哪；"></a>27.select和epoll你了解么，区别在哪；</h3><h3 id="28-TCP-UDP区别；三次握手四次挥手讲一下；"><a href="#28-TCP-UDP区别；三次握手四次挥手讲一下；" class="headerlink" title="28.TCP UDP区别；三次握手四次挥手讲一下；"></a>28.TCP UDP区别；三次握手四次挥手讲一下；</h3><p>TCP协议: (在传输之前先建立连接)面向连接(的通信服务):可靠地数据传输，失序,无差错,无丢失,无重复<br>用途:适用于传输内容比较大,网络情况比较好,需要提供准确的情况.比如:聊天信息,文字传输,邮件传输。<br>udp 协议:面向无连接的服务，不可靠，发送时由发送端自主进行,不考虑接收端。<br>用途:适用于网络较差,对传输准确性要求低,广播组播.比如:视频会议,广播数据。</p>
+<p>三次握手:<br>1.客户端向服务器发起链接请求(问是否可以连接)<br>2.服务器接受到请求后进行确认(允许连接)返回报文<br>3.客户端收到许可,建立连接<br>四次挥手:<br>1.主动方发送报文告知被动方要断开连接<br>2.被动发返回报文没告知收到请求,准备断开<br>3.被动发发送报文给主动方告知准备就绪可以断开<br>4.主动方发送报文确定断开</p>
+<h3 id="29-TIME-WAIT过多是因为什么；"><a href="#29-TIME-WAIT过多是因为什么；" class="headerlink" title="29.TIME_WAIT过多是因为什么；"></a>29.TIME_WAIT过多是因为什么；</h3><h3 id="30-http一次连接的全过程：你来说下从用户发起request——到用户接收到response；"><a href="#30-http一次连接的全过程：你来说下从用户发起request——到用户接收到response；" class="headerlink" title="30.http一次连接的全过程：你来说下从用户发起request——到用户接收到response；"></a>30.http一次连接的全过程：你来说下从用户发起request——到用户接收到response；</h3><p>域名解析 —&gt; 发起TCP的3次握手 —&gt; 建立TCP连接后发起http请求 —&gt; 服务器响应http请求，<br>浏览器得到html代码 —&gt; 浏览器解析html代码，并请求html代码中的资源（如js、css、图片等）<br>—&gt; 浏览器对页面进行渲染呈现给用户.<br>参考大神文章：<a href="https://www.cnblogs.com/engeng/articles/5959335.html" target="_blank" rel="noopener">https://www.cnblogs.com/engeng/articles/5959335.html</a></p>
+<h3 id="31-http连接方式。get和post的区别，你还了解其他的方式么；"><a href="#31-http连接方式。get和post的区别，你还了解其他的方式么；" class="headerlink" title="31.http连接方式。get和post的区别，你还了解其他的方式么；"></a>31.http连接方式。get和post的区别，你还了解其他的方式么；</h3><p>get是从服务器上获取数据，post是向服务器传送数据。在客户端， get方式在通过URL提交数据，<br>数据在URL中可以看到；post方式，数据放置在HTML HEADER内提交。<br>对于get方式，服务器端用Request.QueryString获取变量的值，<br>对于post方式，服务器端用Request.Form获取提交的数据。<br>Get 方式提交数据，会带来安全问题，比如一个登陆页面，通过 Get 方式提交数据时，<br>用户名和密码将出现在 URL 上，如果页面可以被缓存或者其他人可以访问客户这台机器，<br>就可以从历史记录获得该用户的帐号和密码，所以表单提交建议使用 Post 方法。</p>
+<h3 id="32-restful你知道么；"><a href="#32-restful你知道么；" class="headerlink" title="32.restful你知道么；"></a>32.restful你知道么；</h3><h3 id="33-状态码你知道多少，比如200-403-404-504等等；"><a href="#33-状态码你知道多少，比如200-403-404-504等等；" class="headerlink" title="33.状态码你知道多少，比如200/403/404/504等等；"></a>33.状态码你知道多少，比如200/403/404/504等等；</h3><p>200：操作成功。<br>403：访问受限，授权过期（错误提示）<br>404：资源，服务器未找到<br>504：网关超时，服务器作为网关或代理，但是没有及时从上游服务器收到请求。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/08/%E9%9D%A2%E8%AF%95%E9%A2%98%E6%B1%87%E6%80%BB/" data-id="ck9yyjzos0000tsv0fir9aqhh" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/05/08/%E9%9D%A2%E8%AF%95%E9%A2%98%E6%B1%87%E6%80%BB/" data-id="ckafjs89v0001j0v00tfm54tt" class="article-share-link">Share</a>
       
       
     </footer>
